@@ -12,7 +12,6 @@
     "test:e2e": "playwright test",
     "test:a11y": "playwright test tests/a11y",
     "build:search": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "postbuild": "if [ -z \"$SKIP_PAGEFIND\" ]; then pnpm build:search || echo 'pagefind skipped'; fi",
     "format": "prettier --write '**/*.{ts,tsx,css,md}'",
     "sanity:dev": "sanity dev",
     "sanity:deploy": "sanity deploy",

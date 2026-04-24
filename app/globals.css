@@ -25,6 +25,15 @@
   --color-border: #D9D4C7;
   --color-focus: #0066CC;
 
+  /* layout */
+  --container-container: 1280px;
+  --container-content: 680px;
+
+  /* fonts */
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
   /* type scale */
   --fs-display-1: clamp(2.75rem, 5vw, 4.5rem);
   --fs-display-2: clamp(2.25rem, 4vw, 3.5rem);
