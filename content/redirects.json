@@ -1,0 +1,23 @@
+[
+  {
+    "from": "/funding-and-support/sustainable-careers",
+    "to": "/development-and-resources/sustainable-careers-resources",
+    "type": 301,
+    "note": "Resolve duplicate — canonicalise under Development"
+  },
+  {
+    "from": "/funding-and-support/sustainable-careers/make-connections",
+    "to": "/development-and-resources/sustainable-careers-resources/make-connections",
+    "type": 301
+  },
+  {
+    "from": "/funding-and-support/sustainable-careers/navigate-the-law",
+    "to": "/development-and-resources/sustainable-careers-resources/navigate-the-law",
+    "type": 301
+  },
+  {
+    "from": "/funding-and-support/sustainable-careers/navigate-your-finances",
+    "to": "/development-and-resources/sustainable-careers-resources/navigate-your-finances",
+    "type": 301
+  }
+]
