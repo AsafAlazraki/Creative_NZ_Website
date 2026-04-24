@@ -13,14 +13,19 @@ const SCHEMA = z.object({
   honeypot: z.string().max(0),
 });
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const parsed = SCHEMA.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: 'invalid', issues: parsed.error.issues }, { status: 400 });
   }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[contact] RESEND_API_KEY missing — skipping provider call');
+    return NextResponse.json({ ok: true, mocked: true });
+  }
+  const resend = new Resend(apiKey);
 
   const { name, email, phone, topic, artform, message, reply } = parsed.data;
 

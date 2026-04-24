@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { cn } from '@/lib/cn';
 
@@ -99,9 +100,9 @@ export function NewsletterSignup({ variant = 'inline', locale = 'en' }: Props) {
       </div>
       <p className={cn('text-xs', isFooter ? 'text-paper/70' : 'text-muted')}>
         {locale === 'mi' ? (
-          <>Mā tō ohautanga ka whakaae koe ki tā mātou <a href="/mi/privacy" className="underline">kaupapa tūmataiti</a>.</>
+          <>Mā tō ohautanga ka whakaae koe ki tā mātou <Link href="/mi/privacy" className="underline">kaupapa tūmataiti</Link>.</>
         ) : (
-          <>By subscribing you agree to our <a href="/privacy" className="underline">privacy policy</a>.</>
+          <>By subscribing you agree to our <Link href="/privacy" className="underline">privacy policy</Link>.</>
         )}
       </p>
       {status === 'error' && (

@@ -24,12 +24,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
       - name: Install
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Typecheck
         run: pnpm typecheck
       - name: Lint
-        run: pnpm lint || true
+        run: pnpm lint
       - name: Unit tests
         run: pnpm test:unit
       - name: Build
@@ -37,7 +38,6 @@ jobs:
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-          SKIP_PAGEFIND: '1'
 
   lighthouse:
     needs: quality
@@ -51,8 +51,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: pnpm install --no-frozen-lockfile
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
-        env:
-          SKIP_PAGEFIND: '1'
       - run: pnpm dlx @lhci/cli@0.14.x autorun --upload.target=temporary-public-storage
