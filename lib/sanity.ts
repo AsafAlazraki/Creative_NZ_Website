@@ -1,13 +1,17 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
+const rawProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const rawDataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 
-export const sanityConfigured = Boolean(projectId);
+// GitHub Actions exposes undefined secrets as empty strings, so use || not ??.
+const projectId = rawProjectId || 'placeholder';
+const dataset = rawDataset || 'production';
+
+export const sanityConfigured = Boolean(rawProjectId);
 
 export const sanityClient = createClient({
-  projectId: projectId ?? 'placeholder',
+  projectId,
   dataset,
   apiVersion: '2024-12-01',
   useCdn: true,

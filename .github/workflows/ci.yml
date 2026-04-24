@@ -34,10 +34,27 @@ jobs:
       - name: Unit tests
         run: pnpm test:unit
       - name: Build
-        run: pnpm build
+        id: build
+        run: |
+          set -o pipefail
+          pnpm build 2>&1 | tee build.log
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+      - name: Echo build log to summary on failure
+        if: failure() && steps.build.conclusion == 'failure'
+        run: |
+          echo '## Build log' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -c 40000 build.log >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
 
   lighthouse:
     needs: quality
