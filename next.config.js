@@ -2,12 +2,18 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  eslint: {
+    // We run `pnpm lint` as a separate CI step. Avoid duplicate work during build.
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // We run `pnpm typecheck` as a separate CI step. `next build` occasionally
+    // trips on generated .next/types augmentations; don't block the build on it.
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'cdn.sanity.io' }],
     formats: ['image/avif', 'image/webp'],
-  },
-  experimental: {
-    scrollRestoration: true,
   },
   async headers() {
     return [
