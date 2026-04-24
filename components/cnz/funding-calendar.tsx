@@ -54,7 +54,7 @@ export function FundingCalendar({ items }: Props) {
                       : 'border-border bg-paper hover:bg-paper-alt')
                   }
                 >
-                  {s === 'all' ? 'All' : s === 'closing' ? 'Closing soon' : s[0].toUpperCase() + s.slice(1)}
+                  {s === 'all' ? 'All' : s === 'closing' ? 'Closing soon' : s.charAt(0).toUpperCase() + s.slice(1)}
                 </button>
               ))}
             </div>

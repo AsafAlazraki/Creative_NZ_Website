@@ -24,13 +24,13 @@ export async function POST(request: NextRequest) {
 
   const { name, email, phone, topic, artform, message, reply } = parsed.data;
 
-  const routing: Record<string, string> = {
+  const routing = {
     funding: 'funding@creativenz.govt.nz',
     media: 'comms@creativenz.govt.nz',
     partnership: 'partnerships@creativenz.govt.nz',
     complaint: 'complaints@creativenz.govt.nz',
     other: 'info@creativenz.govt.nz',
-  };
+  } as const satisfies Record<typeof topic, string>;
 
   try {
     await resend.emails.send({

@@ -45,6 +45,9 @@ export async function POST(request: NextRequest) {
   }
 
   const dc = apiKey.split('-')[1];
+  if (!dc) {
+    return NextResponse.json({ error: 'invalid_api_key' }, { status: 500 });
+  }
   const subscriberHash = await hashEmail(email.toLowerCase());
   const url = `https://${dc}.api.mailchimp.com/3.0/lists/${listId}/members/${subscriberHash}`;
 
