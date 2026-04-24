@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss';
-import typography from '@tailwindcss/typography';
 
 export default {
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
@@ -50,26 +49,6 @@ export default {
         entry: 'cubic-bezier(0.2, 0, 0, 1)',
         exit: 'cubic-bezier(0.4, 0, 1, 1)',
       },
-      typography: ({ theme }: any) => ({
-        DEFAULT: {
-          css: {
-            color: theme('colors.ink'),
-            maxWidth: '68ch',
-            a: {
-              color: theme('colors.ink'),
-              textDecoration: 'underline',
-              textDecorationThickness: '1px',
-              textUnderlineOffset: '3px',
-              '&:hover': { textDecorationThickness: '2px' },
-            },
-            'h2, h3, h4': {
-              fontFamily: theme('fontFamily.serif').join(','),
-              fontWeight: '600',
-            },
-          },
-        },
-      }),
     },
   },
-  plugins: [typography],
 } satisfies Config;

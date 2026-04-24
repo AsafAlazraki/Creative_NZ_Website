@@ -31,20 +31,11 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { locale?: 'en' | 'mi' };
-}) {
-  const locale = params?.locale ?? 'en';
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={locale} className={`${inter.variable} ${serif.variable}`}>
+    <html lang="en" className={`${inter.variable} ${serif.variable}`}>
       <body>
-        <a href="#main" className="skip-link">
-          {locale === 'mi' ? 'Peke ki te kiko matua' : 'Skip to main content'}
-        </a>
+        <a href="#main" className="skip-link">Skip to main content</a>
         {children}
       </body>
     </html>

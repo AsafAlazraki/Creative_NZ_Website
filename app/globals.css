@@ -114,7 +114,40 @@ a:hover {
   border-width: 0;
 }
 
-.prose { max-width: 68ch; }
+/* Prose: measure enforced, modest defaults without tailwind/typography plugin */
+.prose-cnz { max-width: 68ch; }
+.prose-cnz > * + * { margin-top: 1em; }
+.prose-cnz h2 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+.prose-cnz h3 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.375rem;
+  line-height: 1.25;
+  margin-top: 1.6em;
+  margin-bottom: 0.4em;
+}
+.prose-cnz p { line-height: 1.7; }
+.prose-cnz ul, .prose-cnz ol { padding-left: 1.5em; }
+.prose-cnz ul { list-style: disc; }
+.prose-cnz ol { list-style: decimal; }
+.prose-cnz li + li { margin-top: 0.25em; }
+.prose-cnz a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-cnz blockquote {
+  border-left: 3px solid var(--color-border);
+  padding-left: 1em;
+  font-style: italic;
+}
 
 [lang="mi"] {
   font-style: normal;
