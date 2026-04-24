@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+ 
+@theme {
+  /* core */
+  --color-ink: #1A1A1A;
+  --color-paper: #FAF8F3;
+  --color-paper-alt: #F2EEE4;
+  --color-gold: #D4A43C;
+  --color-gold-deep: #A87E21;
+  --color-navy: #0B2F4B;
+ 
+  /* accents */
+  --color-orange: #E88B2F;
+  --color-cyan: #2BA8C8;
+  --color-lime: #C4D046;
+  --color-coral: #D45C4A;
+  --color-plum: #6B3F6E;
+ 
+  /* functional */
+  --color-success: #2E7D4F;
+  --color-warning: #B86A00;
+  --color-error: #B3261E;
+  --color-info: #1F6B95;
+  --color-muted: #6B6B6B;
+  --color-border: #D9D4C7;
+  --color-focus: #0066CC;
+ 
+  /* type scale */
+  --fs-display-1: clamp(2.75rem, 5vw, 4.5rem);
+  --fs-display-2: clamp(2.25rem, 4vw, 3.5rem);
+  --fs-h1: clamp(2rem, 3vw, 2.75rem);
+  --fs-h2: 1.75rem;
+  --fs-h3: 1.375rem;
+  --fs-h4: 1.125rem;
+  --fs-body-lg: 1.125rem;
+  --fs-body: 1rem;
+  --fs-body-sm: 0.9375rem;
+  --fs-ui: 0.875rem;
+  --fs-eyebrow: 0.75rem;
+}
+ 
+/* base reset + global */
+html {
+  color: var(--color-ink);
+  background: var(--color-paper);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+ 
+body {
+  min-height: 100dvh;
+}
+ 
+/* Headings use serif, not body sans */
+h1, h2, h3, h4 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+ 
+/* Links default underlined */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+ 
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+ 
+/* Scroll margin so sticky header doesn't obscure target */
+:target, [id] {
+  scroll-margin-top: 96px;
+}
+ 
+/* Skip link visible on focus */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  padding: 0.75rem 1rem;
+  background: var(--color-paper);
+  border: 2px solid var(--color-focus);
+  z-index: 100;
+  transition: top 150ms;
+}
+.skip-link:focus {
+  top: 0;
+}
+ 
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+ 
+/* Screen-reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+ 
+/* Prose measure enforced */
+.prose { max-width: 68ch; }
+ 
+/* Print */
+@media print {
+  nav, footer, .no-print { display: none; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #555; }
+  body { font-family: Georgia, serif; font-size: 11pt; }
+}
