@@ -119,7 +119,7 @@ export default function Header() {
         <div className="floatbar-pill">
           {/* Brand */}
           <Link to="/" className="floatbar-brand" aria-label="Creative New Zealand home">
-            <img src="/project/assets/logo.webp" alt="Creative New Zealand · Toi Aotearoa" className="floatbar-logo" />
+            <img src="/logo.webp" alt="Creative New Zealand · Toi Aotearoa" className="floatbar-logo" />
           </Link>
 
           {/* Nav */}

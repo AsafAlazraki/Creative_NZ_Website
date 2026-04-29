@@ -2,6 +2,11 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { IMAGES, OPPORTUNITIES } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
+import { ShaderBackground } from '@/components/effects/ShaderBackground'
+import { NoiseGrain } from '@/components/effects/NoiseGrain'
+import { DriftingKoru } from '@/components/effects/DriftingKoru'
+import { OceanWaves } from '@/components/effects/OceanWaves'
+import { SiapoPattern } from '@/components/effects/SiapoPattern'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 const MAORI_OPPS = OPPORTUNITIES.filter(o => o.tier === 'maori' || o.id === 'banff')
@@ -34,7 +39,7 @@ export default function ToiMaoriPage() {
     <>
       <Breadcrumbs trail={[{ label: 'Home', path: '/' }, { label: 'Ngā Toi Māori' }]} />
 
-      {/* Page head — dark with kowhai accents */}
+      {/* Page head — dark with kowhai accents and shader flow */}
       <section style={{
         background: 'var(--ink)',
         color: 'var(--bg)',
@@ -42,10 +47,14 @@ export default function ToiMaoriPage() {
         position: 'relative',
         overflow: 'hidden',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
+        minHeight: 480,
       }}>
+        <ShaderBackground palette="maori" intensity="hero" speed={0.12} />
+        <DriftingKoru parallax={true} color="var(--kowhai)" />
+        <NoiseGrain opacity={0.10} blendMode="overlay" />
         <KoruCorner position="tr" size={420} color="var(--kowhai)" opacity={0.08} />
         <KoruCorner position="bl" size={280} color="var(--kowhai)" opacity={0.04} />
-        <div className="container">
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -3,7 +3,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { FUNDING_TIERS, OPPORTUNITIES, STATS, STORIES, IMAGES } from '@/data'
 import { KoruCorner, KoruBand, KoruSpiral, MagneticHover, ScrollReveal, AnimatedKoru, ParallaxImage } from '@/components/motif/KoruMotifs'
+import { ShaderBackground } from '@/components/effects/ShaderBackground'
+import { NoiseGrain } from '@/components/effects/NoiseGrain'
+import { DriftingKoru } from '@/components/effects/DriftingKoru'
+import { KineticType } from '@/components/effects/KineticType'
+import { OceanWaves } from '@/components/effects/OceanWaves'
+import { SiapoDivider } from '@/components/effects/SiapoPattern'
 import CountUp from './CountUp'
+
+const HERO_VERBS = ['give life', 'give breath', 'give voice', 'give meaning']
 
 // Animated stat number
 function StatNumber({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) {
@@ -67,11 +75,18 @@ export default function HomePage() {
 
       {/* Hero */}
       <section ref={heroRef} className="hero" style={{ overflow: 'hidden' }}>
-        <KoruCorner position="tr" size={400} color="var(--kowhai)" opacity={0.10} />
-        <div style={{ position: 'absolute', top: 40, right: 80, pointerEvents: 'none' }}>
-          <AnimatedKoru size={200} color="var(--kowhai)" opacity={0.06} delay={0.5} />
+        {/* Phoenix-style WebGL background */}
+        <ShaderBackground palette="aotearoa" intensity="hero" />
+        {/* Drifting koru parallax layer */}
+        <DriftingKoru parallax={true} />
+        {/* Filmic grain texture */}
+        <NoiseGrain opacity={0.05} blendMode="multiply" />
+        {/* Original corner motif on top */}
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <KoruCorner position="tr" size={400} color="var(--kowhai)" opacity={0.10} />
         </div>
-        <div className="container">
+
+        <div className="container" style={{ position: 'relative', zIndex: 3 }}>
           <div className="hero-grid">
             {/* Left: text */}
             <div>
@@ -90,7 +105,7 @@ export default function HomePage() {
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
               >
                 The arts{' '}
-                <span className="accent">give life</span>
+                <KineticType words={HERO_VERBS} variant="inline" interval={2800} />
                 {' '}to the spirit, the spirit gives life to the people.
               </motion.h1>
 
@@ -222,11 +237,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Wave transition into stats */}
+      <div style={{ background: 'var(--ink)' }}>
+        <OceanWaves color="var(--kowhai)" opacity={0.5} height={80} speed={0.7} lines={3} />
+      </div>
+
       {/* Stats band */}
-      <section className="stats-band">
+      <section className="stats-band" style={{ position: 'relative', overflow: 'hidden' }}>
+        <ShaderBackground palette="ink" intensity="medium" speed={0.08} />
+        <NoiseGrain opacity={0.08} blendMode="overlay" />
         <KoruCorner position="bl" size={480} color="#fff" opacity={0.03} />
         <KoruCorner position="tr" size={360} color="#fff" opacity={0.02} />
-        <div className="stats-band-inner">
+        <div className="stats-band-inner" style={{ position: 'relative', zIndex: 2 }}>
           <ScrollReveal>
             <span className="eyebrow" style={{ color: 'var(--kowhai)' }}>Ko Aotearoa me ōna Toi · 2026</span>
             <h2 style={{ marginTop: 24 }}>The arts shape who we are — and they're made in every corner of Aotearoa.</h2>
@@ -290,13 +312,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <KoruBand count={32} color="var(--moana)" opacity={0.09} height={30} />
+      <div style={{ background: 'var(--paper)', padding: '8px 0' }}>
+        <SiapoDivider variant="diamonds" color="var(--moana)" height={48} />
+      </div>
 
       {/* Pasifika & Māori */}
-      <section className="pasifika-band">
+      <section className="pasifika-band" style={{ position: 'relative', overflow: 'hidden' }}>
+        <ShaderBackground palette="pasifika" intensity="medium" speed={0.10} />
+        <NoiseGrain opacity={0.07} blendMode="overlay" />
         <KoruCorner position="tl" size={360} color="var(--moana)" opacity={0.07} />
         <KoruCorner position="br" size={320} color="var(--pohutukawa)" opacity={0.07} />
-        <div className="pasifika-band-inner">
+        <div className="pasifika-band-inner" style={{ position: 'relative', zIndex: 2 }}>
           <ScrollReveal>
             <div>
               <span className="eyebrow">Ngā Toi Māori · Toi Pasifika</span>

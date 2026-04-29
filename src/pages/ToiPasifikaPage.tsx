@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { IMAGES, OPPORTUNITIES, STORIES } from '@/data'
 import { KoruCorner, KoruBand, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
+import { ShaderBackground } from '@/components/effects/ShaderBackground'
+import { NoiseGrain } from '@/components/effects/NoiseGrain'
+import { OceanWaves } from '@/components/effects/OceanWaves'
+import { SiapoPattern, SiapoDivider } from '@/components/effects/SiapoPattern'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 const PASIFIKA_OPPS = OPPORTUNITIES.filter(o => o.tier === 'pasifika')
@@ -45,17 +49,21 @@ export default function ToiPasifikaPage() {
     <>
       <Breadcrumbs trail={[{ label: 'Home', path: '/' }, { label: 'Toi Pasifika' }]} />
 
-      {/* Page head — ocean blue palette */}
+      {/* Page head — moana shader, deep Pacific currents */}
       <section style={{
         background: 'var(--moana)',
         color: '#fff',
         padding: 'calc(72px * var(--density)) 0 calc(56px * var(--density))',
         position: 'relative',
         overflow: 'hidden',
+        minHeight: 480,
       }}>
+        <ShaderBackground palette="pasifika" intensity="hero" speed={0.14} />
+        <NoiseGrain opacity={0.10} blendMode="overlay" />
+        <SiapoPattern variant="rays" color="#fff" opacity={0.04} size={64} />
         <KoruCorner position="tr" size={420} color="#fff" opacity={0.06} />
         <KoruCorner position="bl" size={300} color="var(--pohutukawa)" opacity={0.12} />
-        <div className="container">
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -116,6 +124,11 @@ export default function ToiPasifikaPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Wave transition out of moana hero */}
+      <div style={{ background: 'var(--moana)' }}>
+        <OceanWaves color="#fff" opacity={0.5} height={100} speed={0.6} lines={4} />
+      </div>
 
       {/* Main content — strategy + image */}
       <section className="section">

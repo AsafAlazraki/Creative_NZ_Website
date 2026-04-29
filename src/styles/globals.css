@@ -683,8 +683,41 @@ body { padding-top: 68px; }
   position: relative;
   overflow: hidden;
 }
+.page-head::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 18% 22%, rgba(232,163,23,0.16) 0%, transparent 70%),
+    radial-gradient(55% 60% at 82% 28%, rgba(30,95,116,0.13) 0%, transparent 72%),
+    radial-gradient(50% 45% at 50% 100%, rgba(200,70,60,0.10) 0%, transparent 70%),
+    radial-gradient(40% 60% at 0% 100%, rgba(63,94,58,0.08) 0%, transparent 70%);
+  filter: blur(40px);
+  animation: cnz-ambient-flow 36s cubic-bezier(0.4, 0.0, 0.6, 1.0) infinite alternate;
+}
+.page-head::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+}
+.page-head > * { position: relative; z-index: 1; }
+@keyframes cnz-ambient-flow {
+  0%   { transform: scale(1)    translate(0%, 0%);   }
+  50%  { transform: scale(1.08) translate(-2%, -1%); }
+  100% { transform: scale(1.15) translate(-3%, -2%); }
+}
 .page-head h1 { font-size: clamp(40px, 5vw, 68px); margin-bottom: 18px; }
 .page-head .lede { max-width: 720px; }
+@media (prefers-reduced-motion: reduce) {
+  .page-head::before { animation: none; }
+}
 
 /* ── Funding tiers ──────────────────── */
 .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
@@ -924,6 +957,54 @@ body { padding-top: 68px; }
 @media (max-width: 480px) {
   .pasifika-tiles { grid-template-columns: 1fr; }
   .footer-cols { grid-template-columns: 1fr; }
+}
+
+/* Force inline 2-column grids to stack on mobile.
+   Pages use inline grid styles like '1fr 1fr' / '1.2fr 1fr' / '2fr 1fr' / '1fr 2fr'.
+   At <=768 these all become single-column. */
+@media (max-width: 768px) {
+  [style*="grid-template-columns: '1fr 1fr'"],
+  [style*='grid-template-columns: "1fr 1fr"'],
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="1.2fr 1fr"],
+  [style*="1.4fr 1fr"],
+  [style*="2fr 1fr"],
+  [style*="1fr 2fr"],
+  [style*="200px 1fr"],
+  [style*="80px 1fr"],
+  [style*="60px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  /* Sticky sidebars become inline on mobile */
+  aside[style*="sticky"] {
+    position: static !important;
+  }
+  /* Awards / large display rows */
+  [style*="180px 1fr 200px"],
+  [style*="200px 1fr 160px"],
+  [style*="80px 1fr 100px 80px"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  /* 3-column grids → stack */
+  [style*="repeat(3, 1fr)"],
+  [style*="repeat(3,1fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  /* Hero h1 with KineticType inline word — softer wrap */
+  .hero h1 { font-size: clamp(34px, 8vw, 56px); line-height: 1.05; }
+  .page-head { padding: 56px 0 40px; }
+  .page-head h1 { font-size: clamp(32px, 7.5vw, 48px); }
+  .lede { font-size: clamp(15px, 3.6vw, 20px); }
+  .stats-band-inner { padding: 64px 0; }
+  .section { padding: 64px 0; }
+  .section-tight { padding: 48px 0; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat .num { font-size: 40px; }
 }
 
 /* ── Animations ─────────────────────── */
