@@ -19,8 +19,9 @@ const PALETTES: Record<ShaderPalette, string[]> = {
   maori:    ['#1a1612', '#3F5E3A', '#E8A317', '#6B4423', '#1a1612'],
   // Te Moana-nui-a-Kiwa — Pacific ocean currents, deep moana with pohutukawa sunset.
   pasifika: ['#0a3f50', '#1E5F74', '#67A9C6', '#E8A317', '#C8463C'],
-  // Light wash for inner pages — barely there.
-  paper:    ['#fbf9f3', '#f5f0e3', '#E8DCC4', '#f5f0e3', '#fbf9f3'],
+  // Editorial cream — barely-there breathing on a paper backdrop.
+  // Mostly cream, with one tiny breath of kowhai and one of moana — never saturated.
+  paper:    ['#fffdf7', '#fbf9f3', '#f5f0e3', '#fbf3dc', '#eef4f6'],
   // Dark ambient for dark sections.
   ink:      ['#0e0c08', '#1a1612', '#3a342c', '#1a1612', '#0e0c08'],
 }
@@ -36,7 +37,7 @@ interface ShaderBackgroundProps {
 const PRESETS = {
   hero:    { distortion: 0.85, swirl: 0.6,  grainMixer: 0.2,  grainOverlay: 0.08, speed: 0.18 },
   medium:  { distortion: 0.6,  swirl: 0.4,  grainMixer: 0.15, grainOverlay: 0.05, speed: 0.14 },
-  subtle:  { distortion: 0.45, swirl: 0.25, grainMixer: 0.08, grainOverlay: 0.03, speed: 0.10 },
+  subtle:  { distortion: 0.7,  swirl: 0.5,  grainMixer: 0.10, grainOverlay: 0.04, speed: 0.07 },
 }
 
 export function ShaderBackground({
@@ -73,17 +74,20 @@ export function ShaderBackground({
         speed={reducedMotion ? 0 : computedSpeed}
         style={{ width: '100%', height: '100%' }}
       />
-      {/* soft fade-to-content at bottom so type stays readable */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: intensity === 'hero'
-            ? 'linear-gradient(to bottom, rgba(255,253,247,0.0) 0%, rgba(255,253,247,0.25) 70%, rgba(255,253,247,0.55) 100%)'
-            : 'linear-gradient(to bottom, rgba(255,253,247,0.15) 0%, rgba(255,253,247,0.4) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
+      {/* soft fade-to-content at bottom so type stays readable.
+          Lighter for paper palette (already pale), heavier for vivid ones. */}
+      {palette !== 'paper' && palette !== 'ink' && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: intensity === 'hero'
+              ? 'linear-gradient(to bottom, rgba(255,253,247,0.0) 0%, rgba(255,253,247,0.20) 70%, rgba(255,253,247,0.45) 100%)'
+              : 'linear-gradient(to bottom, rgba(255,253,247,0.12) 0%, rgba(255,253,247,0.32) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -7,21 +7,26 @@ export const SITE = {
   },
 };
 
+// Arts-themed stock photography from Unsplash. URL params include w/q/auto/fit
+// for consistent crop + size and to dodge any source-cache weirdness.
+const U = (id: string, w = 1200) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+
 export const IMAGES = {
-  early: 'https://creativenz.govt.nz/-/media/project/creative-nz/creativenz/fundingandsupportimages/20231106_website_early_career.png?w=900&hash=FB5B108A7A58FB687AC422A8C3888876',
-  artists: 'https://creativenz.govt.nz/-/media/project/creative-nz/creativenz/fundingandsupportimages/20231106_website_artists.png?w=900&hash=36132AA865027545E2B660826A9FB40E',
-  orgs: 'https://creativenz.govt.nz/-/media/project/creative-nz/creativenz/fundingandsupportimages/20231106_website_arts_organisaions.png?w=900&hash=DE600A55066E554B3AE16DCC9D8AE4EE',
-  pasifika: 'https://images.unsplash.com/photo-1581375074612-d1fd0e661aeb?w=1200&q=80',
-  performance: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=1200&q=80',
-  community: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&q=80',
-  gallery: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1200&q=80',
-  studio: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1200&q=80',
-  music: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&q=80',
-  dance: 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=1200&q=80',
-  craft: 'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1200&q=80',
-  literature: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200&q=80',
-  theatre: 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=1200&q=80',
-  carving: 'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=1200&q=80',
+  early:       U('1517245386807-bb43f82c33c4'), // young artist painting
+  artists:     U('1513364776144-60967b0f800f'), // hands working
+  orgs:        U('1503095396549-807759245b35'), // theatre stage
+  pasifika:    U('1530653333484-8d27b1cba4a4'), // pacific dancers in traditional dress
+  performance: U('1507676184212-d03ab07a01bf'), // performer on stage
+  community:   U('1511795409834-ef04bbd61622'), // crowd at event
+  gallery:     U('1518998053901-5348d3961a04'), // gallery interior
+  studio:      U('1452860606245-08befc0ff44b'), // pencils / craft objects
+  music:       U('1511671782779-c97d3d27a1d4'), // concert
+  dance:       U('1518834107812-67b0b7c58434'), // dancer in motion
+  craft:       U('1531058020387-3be344556be6'), // ceramic / craft
+  literature:  U('1481627834876-b7833e8f5570'), // open books
+  theatre:     U('1503095396549-807759245b35'), // theatre / red curtain
+  carving:     U('1576020799627-aeac74d58064'), // wood carving / sculpture
 };
 
 export interface Stat {

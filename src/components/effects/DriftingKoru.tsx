@@ -13,10 +13,10 @@ interface KoruInstance {
 }
 
 const DEFAULT_KORU: KoruInstance[] = [
-  { size: 480, top: '-8%',  left: '-6%',  rotate: -15, opacity: 0.05, duration: 70,  direction:  1, parallaxStrength: 80 },
-  { size: 360, top: '40%',  left: '78%',  rotate:  35, opacity: 0.04, duration: 90,  direction: -1, parallaxStrength: 140 },
-  { size: 280, top: '70%',  left: '12%',  rotate: 110, opacity: 0.06, duration: 80,  direction:  1, parallaxStrength: 100 },
-  { size: 220, top: '15%',  left: '55%',  rotate:  -50, opacity: 0.035, duration: 110, direction: -1, parallaxStrength: 60 },
+  { size: 520, top: '-12%', left: '-8%',  rotate: -15, opacity: 0.09, duration: 80,  direction:  1, parallaxStrength: 80  },
+  { size: 380, top: '38%',  left: '76%',  rotate:  35, opacity: 0.07, duration: 100, direction: -1, parallaxStrength: 140 },
+  { size: 300, top: '70%',  left: '8%',   rotate: 110, opacity: 0.08, duration: 90,  direction:  1, parallaxStrength: 100 },
+  { size: 240, top: '12%',  left: '52%',  rotate:  -50, opacity: 0.05, duration: 120, direction: -1, parallaxStrength: 60  },
 ]
 
 function useResponsiveScale() {

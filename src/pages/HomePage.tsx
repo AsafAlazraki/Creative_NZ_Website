@@ -73,17 +73,15 @@ export default function HomePage() {
         <Link to="/funding/opportunities">View all opportunities →</Link>
       </div>
 
-      {/* Hero */}
-      <section ref={heroRef} className="hero" style={{ overflow: 'hidden' }}>
-        {/* Phoenix-style WebGL background */}
-        <ShaderBackground palette="aotearoa" intensity="hero" />
-        {/* Drifting koru parallax layer */}
-        <DriftingKoru parallax={true} />
-        {/* Filmic grain texture */}
-        <NoiseGrain opacity={0.05} blendMode="multiply" />
+      {/* Hero — editorial cream with very subtle motion */}
+      <section ref={heroRef} className="hero" style={{ overflow: 'hidden', background: 'var(--bg)' }}>
+        {/* Subtle paper-tone shader, very low intensity */}
+        <ShaderBackground palette="paper" intensity="subtle" speed={0.06} />
+        {/* Drifting koru: more visible since shader is restrained */}
+        <DriftingKoru parallax={true} color="var(--kowhai)" />
         {/* Original corner motif on top */}
         <div style={{ position: 'relative', zIndex: 2 }}>
-          <KoruCorner position="tr" size={400} color="var(--kowhai)" opacity={0.10} />
+          <KoruCorner position="tr" size={400} color="var(--kowhai)" opacity={0.08} />
         </div>
 
         <div className="container" style={{ position: 'relative', zIndex: 3 }}>
@@ -237,17 +235,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Wave transition into stats */}
-      <div style={{ background: 'var(--ink)' }}>
-        <OceanWaves color="var(--kowhai)" opacity={0.5} height={80} speed={0.7} lines={3} />
-      </div>
-
       {/* Stats band */}
       <section className="stats-band" style={{ position: 'relative', overflow: 'hidden' }}>
-        <ShaderBackground palette="ink" intensity="medium" speed={0.08} />
-        <NoiseGrain opacity={0.08} blendMode="overlay" />
-        <KoruCorner position="bl" size={480} color="#fff" opacity={0.03} />
-        <KoruCorner position="tr" size={360} color="#fff" opacity={0.02} />
+        <ShaderBackground palette="ink" intensity="subtle" speed={0.05} />
+        <KoruCorner position="bl" size={480} color="var(--kowhai)" opacity={0.04} />
+        <KoruCorner position="tr" size={360} color="#fff" opacity={0.025} />
         <div className="stats-band-inner" style={{ position: 'relative', zIndex: 2 }}>
           <ScrollReveal>
             <span className="eyebrow" style={{ color: 'var(--kowhai)' }}>Ko Aotearoa me ōna Toi · 2026</span>
@@ -312,16 +304,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div style={{ background: 'var(--paper)', padding: '8px 0' }}>
-        <SiapoDivider variant="diamonds" color="var(--moana)" height={48} />
-      </div>
-
-      {/* Pasifika & Māori */}
+      {/* Pasifika & Māori — clean dark band, restrained moana shader behind headline only */}
       <section className="pasifika-band" style={{ position: 'relative', overflow: 'hidden' }}>
-        <ShaderBackground palette="pasifika" intensity="medium" speed={0.10} />
-        <NoiseGrain opacity={0.07} blendMode="overlay" />
-        <KoruCorner position="tl" size={360} color="var(--moana)" opacity={0.07} />
-        <KoruCorner position="br" size={320} color="var(--pohutukawa)" opacity={0.07} />
+        <KoruCorner position="tl" size={360} color="var(--moana)" opacity={0.10} />
+        <KoruCorner position="br" size={320} color="var(--pohutukawa)" opacity={0.08} />
         <div className="pasifika-band-inner" style={{ position: 'relative', zIndex: 2 }}>
           <ScrollReveal>
             <div>
@@ -378,7 +364,7 @@ export default function HomePage() {
             </div>
           </ScrollReveal>
           <div className="news-grid">
-            {STORIES.slice(0, 5).map((s, i) => (
+            {STORIES.slice(0, 4).map((s, i) => (
               <motion.div
                 key={s.id}
                 initial={{ opacity: 0, y: 28 }}
@@ -386,11 +372,10 @@ export default function HomePage() {
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.08 }}
               >
-                <Link to={`/news/${s.id}`} className={`ncard ${i === 0 ? 'news-feature' : ''}`}>
+                <Link to={`/news/${s.id}`} className="ncard">
                   <div className="ncard-img"><img src={s.img} alt="" /></div>
-                  <div className="cat">{s.cat}{s.kupu ? ` · ${s.kupu}` : ''}</div>
+                  <div className="cat">{s.cat}</div>
                   <h3>{s.title}</h3>
-                  {i === 0 && <p>{s.excerpt}</p>}
                   <div className="date">{s.date} · {s.read} read</div>
                 </Link>
               </motion.div>
