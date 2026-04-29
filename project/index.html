@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Creative New Zealand · Toi Aotearoa — Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="floatbar.css" />
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="chrome.jsx"></script>
+<script type="text/babel" src="koru-motif.jsx"></script>
+<script type="text/babel" src="page-home.jsx"></script>
+<script type="text/babel" src="page-funding.jsx"></script>
+<script type="text/babel" src="page-other.jsx"></script>
+
+<script type="text/babel">
+const { Router, useRouter, Header, Footer, Link } = window;
+const { useState, useEffect } = React;
+
+const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "kowhai",
+  "type": "fraunces-inter",
+  "density": "comfortable",
+  "dark": false
+}/*EDITMODE-END*/;
+
+const ACCENTS = {
+  kowhai: { primary: '#E8A317', deep: '#B87C0A', accent2: '#C8463C' },
+  pohutukawa: { primary: '#C8463C', deep: '#9A2D24', accent2: '#1E5F74' },
+  moana: { primary: '#1E5F74', deep: '#0F3D4D', accent2: '#E8A317' },
+  bush: { primary: '#3F5E3A', deep: '#2A4226', accent2: '#C8463C' },
+  ink: { primary: '#1a1612', deep: '#000', accent2: '#E8A317' },
+};
+
+const TYPE_PAIRS = {
+  'fraunces-inter': { display: '"Fraunces", Georgia, serif', body: '"Inter", system-ui, sans-serif' },
+  'playfair-source': { display: '"Playfair Display", Georgia, serif', body: '"Source Sans 3", system-ui, sans-serif' },
+  'serif-only': { display: '"Fraunces", Georgia, serif', body: '"Fraunces", Georgia, serif' },
+  'sans-only': { display: '"Inter", sans-serif', body: '"Inter", sans-serif' },
+};
+
+function applyTweaks(t) {
+  const root = document.documentElement;
+  const a = ACCENTS[t.accent] || ACCENTS.kowhai;
+  root.style.setProperty('--accent', a.primary);
+  root.style.setProperty('--accent-2', a.accent2);
+  const fonts = TYPE_PAIRS[t.type] || TYPE_PAIRS['fraunces-inter'];
+  root.style.setProperty('--font-display', fonts.display);
+  root.style.setProperty('--font-body', fonts.body);
+  root.style.setProperty('--density', t.density === 'compact' ? 0.75 : t.density === 'spacious' ? 1.15 : 1);
+  root.setAttribute('data-theme', t.dark ? 'dark' : 'light');
+}
+
+function Page() {
+  const { path } = useRouter();
+  // Parse path — strip query string before splitting
+  const cleanPath = path.split('?')[0];
+  const parts = cleanPath.split('/').filter(Boolean);
+  const top = parts[0];
+
+  let content;
+  if (path === '/' || path === '') content = <window.HomePage />;
+  else if (top === 'funding') {
+    if (parts[1] === 'opportunities') content = <window.Opportunities />;
+    else if (parts[1] === 'opportunity' && parts[2]) content = <window.OpportunityDetail oppId={parts[2]} />;
+    else if (parts[1] === 'apply') content = <window.ApplyFlow />;
+    else if (parts[1] === 'calendar') content = <window.FundingCalendar />;
+    else if (parts[1] === 'advice') content = <window.FundingAdvice />;
+    else if (parts[1] === 'results') content = <window.FundingResults />;
+    else if (parts[1] === 'awards') content = <window.AwardsPage />;
+    else if (parts[1] === 'adviser') content = <window.AdviserPage />;
+    else if (parts[1] && ['early','artists','orgs'].includes(parts[1].replace('early-career','early').replace('organisations','orgs'))) {
+      const tier = parts[1] === 'early-career' ? 'early' : parts[1] === 'organisations' ? 'orgs' : parts[1];
+      content = <window.FundingTier tierId={tier} />;
+    }
+    else content = <window.FundingHub />;
+  }
+  else if (top === 'advocacy') content = <window.AdvocacyPage />;
+  else if (top === 'resources') content = <window.ResourcesPage />;
+  else if (top === 'about') {
+    if (parts[1] === 'council') content = <window.CouncilPage />;
+    else if (parts[1] === 'contact') content = <window.ContactPage />;
+    else content = <window.AboutPage />;
+  }
+  else if (top === 'news') {
+    if (parts[1]) content = <window.NewsArticle id={parts[1]} />;
+    else content = <window.NewsIndex />;
+  }
+  else if (top === 'toi-maori') content = <window.ToiMaoriPage />;
+  else if (top === 'toi-pasifika') content = <window.ToiPasifikaPage />;
+  else if (top === 'search') content = <window.SearchPage />;
+  else content = (
+    <div className="container section" style={{textAlign:'center', padding:'120px 0'}}>
+      <span className="eyebrow">404</span>
+      <h1 style={{marginTop:16, fontSize:80}}>Page not found.</h1>
+      <p className="lede" style={{maxWidth:480, margin:'24px auto'}}>The page you're looking for has moved or doesn't exist.</p>
+      <Link to="/" className="btn btn-primary" style={{marginTop:24}}>Back to home →</Link>
+    </div>
+  );
+
+  return (
+    <>
+      <Header />
+      <PageTransition routeKey={cleanPath}>
+        {content}
+      </PageTransition>
+      <Footer />
+    </>
+  );
+}
+
+function App() {
+  const [tweaks, setTweak] = window.useTweaks(TWEAKS_DEFAULTS);
+  useEffect(() => { applyTweaks(tweaks); }, [tweaks]);
+
+  const { TweaksPanel, TweakSection, TweakRadio, TweakToggle } = window;
+
+  return (
+    <Router>
+      <Page />
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Accent">
+          <TweakRadio value={tweaks.accent} onChange={v=>setTweak('accent',v)}
+            options={[{value:'kowhai',label:'Kōwhai'},{value:'pohutukawa',label:'Pōhutukawa'},{value:'moana',label:'Moana'},{value:'bush',label:'Ngahere'},{value:'ink',label:'Ink'}]} />
+        </TweakSection>
+        <TweakSection title="Typography">
+          <TweakRadio value={tweaks.type} onChange={v=>setTweak('type',v)}
+            options={[{value:'fraunces-inter',label:'Fraunces + Inter'},{value:'playfair-source',label:'Playfair + Source'},{value:'serif-only',label:'Serif only'},{value:'sans-only',label:'Sans only'}]} />
+        </TweakSection>
+        <TweakSection title="Density">
+          <TweakRadio value={tweaks.density} onChange={v=>setTweak('density',v)}
+            options={[{value:'compact',label:'Compact'},{value:'comfortable',label:'Comfortable'},{value:'spacious',label:'Spacious'}]} />
+        </TweakSection>
+        <TweakSection title="Theme">
+          <TweakToggle value={tweaks.dark} onChange={v=>setTweak('dark',v)} label="Dark mode" />
+        </TweakSection>
+      </TweaksPanel>
+    </Router>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
