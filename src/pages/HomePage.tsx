@@ -191,9 +191,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Koru band divider */}
-      <KoruBand count={32} color="var(--accent)" opacity={0.12} height={36} />
-
       {/* Funding tiers */}
       <section className="section">
         <div className="container">

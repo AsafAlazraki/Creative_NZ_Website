@@ -7,16 +7,15 @@ export const SITE = {
   },
 };
 
-// Arts-themed stock photography from Unsplash. URL params include w/q/auto/fit
-// for consistent crop + size and to dodge any source-cache weirdness.
+// Arts-themed stock photography. Verified working Unsplash URLs.
 const U = (id: string, w = 1200) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
 
 export const IMAGES = {
-  early:       U('1517245386807-bb43f82c33c4'), // young artist painting
-  artists:     U('1513364776144-60967b0f800f'), // hands working
-  orgs:        U('1503095396549-807759245b35'), // theatre stage
-  pasifika:    U('1530653333484-8d27b1cba4a4'), // pacific dancers in traditional dress
+  early:       U('1513364776144-60967b0f800f'), // hands working/craft
+  artists:     U('1452860606245-08befc0ff44b'), // craft tools
+  orgs:        U('1503095396549-807759245b35'), // theatre / stage
+  pasifika:    U('1493225457124-a3eb161ffa5f'), // drumming/music — verified working
   performance: U('1507676184212-d03ab07a01bf'), // performer on stage
   community:   U('1511795409834-ef04bbd61622'), // crowd at event
   gallery:     U('1518998053901-5348d3961a04'), // gallery interior
@@ -26,7 +25,7 @@ export const IMAGES = {
   craft:       U('1531058020387-3be344556be6'), // ceramic / craft
   literature:  U('1481627834876-b7833e8f5570'), // open books
   theatre:     U('1503095396549-807759245b35'), // theatre / red curtain
-  carving:     U('1576020799627-aeac74d58064'), // wood carving / sculpture
+  carving:     U('1605000797499-95a51c5269ae'), // carving — original handoff ID
 };
 
 export interface Stat {

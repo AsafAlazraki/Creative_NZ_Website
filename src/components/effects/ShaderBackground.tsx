@@ -22,8 +22,10 @@ const PALETTES: Record<ShaderPalette, string[]> = {
   // Editorial cream — barely-there breathing on a paper backdrop.
   // Mostly cream, with one tiny breath of kowhai and one of moana — never saturated.
   paper:    ['#fffdf7', '#fbf9f3', '#f5f0e3', '#fbf3dc', '#eef4f6'],
-  // Dark ambient for dark sections.
-  ink:      ['#0e0c08', '#1a1612', '#3a342c', '#1a1612', '#0e0c08'],
+  // Dark ambient for dark sections — adds a warm kowhai breath
+  // and a deep moana shadow so the tonal variance reads as motion,
+  // not flat black.
+  ink:      ['#0e0c08', '#1a1612', '#3a342c', '#5a3d12', '#0e1a20'],
 }
 
 interface ShaderBackgroundProps {

@@ -862,9 +862,17 @@ body { padding-top: 68px; }
   margin-bottom: 4px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  flex-wrap: wrap;
   line-height: 1.15;
+}
+.opp-row .title-cell h4 .title-text {
+  flex: 1;
+  min-width: 0;
+}
+.opp-row .title-cell h4 .status-badge {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 .opp-row .title-cell .kupu { font-size: 13px; }
 .opp-row .desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
@@ -954,6 +962,8 @@ body { padding-top: 68px; }
 .pasifika-band p { font-size: 17px; line-height: 1.64; color: var(--muted); margin-bottom: 28px; }
 .pasifika-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .pasifika-tile {
+  display: flex;
+  flex-direction: column;
   padding: 24px;
   background: var(--card);
   border: 1px solid var(--line);
@@ -964,6 +974,8 @@ body { padding-top: 68px; }
   color: inherit;
   position: relative;
   overflow: hidden;
+  height: 100%;
+  min-height: 180px;
 }
 .pasifika-tile:hover { border-color: var(--ink); transform: translateY(-3px); box-shadow: var(--shadow-2); }
 .pasifika-tile h4 { font-family: var(--font-display); font-size: 20px; margin-bottom: 4px; }
