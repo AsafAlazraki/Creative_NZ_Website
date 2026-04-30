@@ -277,7 +277,7 @@ export default function FundingTier() {
                     <div className="code">{o.code}</div>
                     <div className="title-cell">
                       <h4>
-                        {o.title}{' '}
+                        <span className="title-text">{o.title}</span>
                         <span className={`status-badge ${o.status}`}>{o.status}</span>
                       </h4>
                       {o.kupu && <span className="kupu">{o.kupu}</span>}

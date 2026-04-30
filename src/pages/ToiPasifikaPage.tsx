@@ -270,7 +270,7 @@ export default function ToiPasifikaPage() {
                   <Link to={`/funding/opportunity/${o.id}`} className="opp-row">
                     <div className="code">{o.code}</div>
                     <div className="title-cell">
-                      <h4>{o.title} <span className={`status-badge ${o.status}`}>{o.status}</span></h4>
+                      <h4><span className="title-text">{o.title}</span><span className={`status-badge ${o.status}`}>{o.status}</span></h4>
                       {o.kupu && <span className="kupu">{o.kupu}</span>}
                     </div>
                     <div className="desc">{o.desc}</div>

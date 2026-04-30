@@ -212,7 +212,7 @@ export default function ToiMaoriPage() {
                   <Link to={`/funding/opportunity/${opp.id}`} className="opp-row">
                     <div className="code">{opp.code}</div>
                     <div className="title-cell">
-                      <h4>{opp.title} <span className={`status-badge ${opp.status}`}>{opp.status}</span></h4>
+                      <h4><span className="title-text">{opp.title}</span><span className={`status-badge ${opp.status}`}>{opp.status}</span></h4>
                       {opp.kupu && <span className="kupu">{opp.kupu}</span>}
                     </div>
                     <div className="desc">{opp.desc}</div>

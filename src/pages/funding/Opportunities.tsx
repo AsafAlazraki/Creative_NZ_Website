@@ -198,14 +198,16 @@ export default function Opportunities() {
                         <div className="code">{o.code}</div>
                         <div className="title-cell">
                           <h4>
-                            {o.title}{' '}
+                            <span className="title-text">
+                              {o.title}
+                              {hasDraft && (
+                                <span className="draft-badge" style={{ marginLeft: 8 }}>
+                                  <span className="dot" />
+                                  Draft saved
+                                </span>
+                              )}
+                            </span>
                             <span className={`status-badge ${o.status}`}>{o.status}</span>
-                            {hasDraft && (
-                              <span className="draft-badge" style={{ marginLeft: 8 }}>
-                                <span className="dot" />
-                                Draft saved
-                              </span>
-                            )}
                           </h4>
                           {o.kupu && <span className="kupu">{o.kupu}</span>}
                         </div>
