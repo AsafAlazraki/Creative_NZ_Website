@@ -2055,3 +2055,34 @@ main[id="main-content"]:focus { outline: none; }
   0%   { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
+
+/* Calendar bar rich tooltip — appears on hover/focus */
+.cal-bar { position: absolute; }
+.cal-bar::before {
+  content: attr(data-tooltip-title) ' · ' attr(data-tooltip-amt) ' · ' attr(data-tooltip-when);
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+  box-shadow: var(--shadow-2);
+  z-index: 5;
+}
+@media (hover: hover) {
+  .cal-bar:hover::before,
+  .cal-bar:focus-visible::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

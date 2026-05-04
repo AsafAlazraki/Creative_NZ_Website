@@ -165,6 +165,15 @@ function AnimatedRoutes() {
 function AppContent() {
   const lenisRef = useRef<Lenis | null>(null)
 
+  // §17 — Density compact mode via ?density=compact URL param.
+  // Sets --density: 0.75 on <html>, reducing all section paddings.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('density') === 'compact') {
+      document.documentElement.style.setProperty('--density', '0.75')
+    }
+  }, [])
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,

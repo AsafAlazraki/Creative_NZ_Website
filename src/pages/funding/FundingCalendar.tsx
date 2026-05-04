@@ -211,7 +211,10 @@ export default function FundingCalendar() {
                     <Link
                       to={`/funding/opportunity/${opp.id}`}
                       className={`cal-bar${bar.rolling ? ' cal-bar--rolling' : ''}`}
-                      title={`${opp.title} — ${opp.next}`}
+                      title={`${opp.title} — ${opp.amount} — ${opp.next}`}
+                      data-tooltip-title={opp.title}
+                      data-tooltip-amt={opp.amount}
+                      data-tooltip-when={opp.next}
                       style={{
                         left: `${startPct}%`,
                         width: `${widthPct}%`,

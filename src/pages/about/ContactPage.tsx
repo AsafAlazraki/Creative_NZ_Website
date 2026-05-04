@@ -268,9 +268,20 @@ export default function ContactPage() {
                             onChange={set('message')}
                             required
                             rows={6}
+                            aria-describedby="message-hint"
                             placeholder="Tell us about your project, question or enquiry…"
                           />
-                          <div className="hint">The more context you provide, the better we can help you.</div>
+                          <div id="message-hint" className="hint" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                            <span>The more context you provide, the better we can help you.</span>
+                            <span aria-live="polite" style={{
+                              fontFeatureSettings: '"tnum"',
+                              color: form.message.length > 1000 ? 'var(--pohutukawa)' :
+                                     form.message.length > 800  ? 'var(--kowhai-deep)' :
+                                     'var(--muted)',
+                            }}>
+                              {form.message.length} / 1000
+                            </span>
+                          </div>
                         </div>
                       </div>
                       <div style={{ marginTop: 28, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
