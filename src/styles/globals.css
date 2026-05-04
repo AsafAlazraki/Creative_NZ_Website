@@ -1,6 +1,8 @@
 /* Creative NZ · Toi Aotearoa — Design System */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..700;1,9..144,200..700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Fonts self-hosted via @fontsource-variable, imported in main.tsx.
+   Eliminates the Google Fonts CDN dependency, reduces FOIT, and bundles
+   the variable axes (opsz, wght) via Vite. */
 
 :root {
   /* Brand palette */
