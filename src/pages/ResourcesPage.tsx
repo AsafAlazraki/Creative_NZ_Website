@@ -4,14 +4,6 @@ import { motion } from 'framer-motion'
 import { TOOLKITS, REPORTS } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
-import SubNav from '@/components/ui/SubNav'
-
-const SUBNAV = [
-  { label: 'Toolkits', path: '/resources' },
-  { label: 'Reports & research', path: '/resources/reports' },
-  { label: 'Funding guides', path: '/resources/guides' },
-  { label: 'Professional development', path: '/resources/development' },
-]
 
 const TOOLKIT_ICONS: Record<string, string> = {
   community: '🏘️',
@@ -57,8 +49,6 @@ export default function ResourcesPage() {
           </motion.p>
         </div>
       </section>
-
-      <SubNav items={SUBNAV} />
 
       {/* Tab switcher */}
       <div style={{ background: 'var(--paper)', borderBottom: '1px solid var(--line)', padding: '20px 0' }}>
