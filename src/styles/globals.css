@@ -2086,3 +2086,91 @@ main[id="main-content"]:focus { outline: none; }
     transform: translateX(-50%) translateY(0);
   }
 }
+
+/* ── Strategy pillars (§07) — scroll-driven typographic narrative ── */
+.strategy-pillars-wrap {
+  position: relative;
+  /* the ambient .strategy-bg is fixed/sticky inside this wrap */
+}
+.strategy-bg {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  z-index: 0;
+  /* contains shader + nebula + stars + shooting stars */
+}
+.strategy-bg > * { position: absolute; inset: 0; }
+.strategy-pillars {
+  position: relative;
+  z-index: 2;
+  margin-top: -100vh;  /* overlay the sticky bg */
+}
+.strategy-pillar {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 0;
+  position: relative;
+}
+.strategy-pillar-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 64px;
+  align-items: center;
+}
+.strategy-pillar-text { max-width: 760px; }
+.strategy-pillar-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--kowhai);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 28px;
+}
+.strategy-pillar-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(32px, 4.4vw, 64px);
+  font-variation-settings: 'wght' 250, 'opsz' 96;
+  font-weight: 250;
+  color: #ffffff;
+  line-height: 1.18;
+  margin-bottom: 32px;
+}
+.strategy-pillar-body {
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.65);
+  max-width: 580px;
+  margin: 0;
+}
+.strategy-pillar-number {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(80px, 11vw, 160px);
+  font-variation-settings: 'wght' 200, 'opsz' 144;
+  font-weight: 200;
+  color: var(--kowhai);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+@media (max-width: 900px) {
+  .strategy-pillar-inner { grid-template-columns: 1fr; gap: 24px; }
+  .strategy-pillar-number { font-size: clamp(60px, 18vw, 120px); }
+}
+
+/* Closing CTA band on kowhai */
+.strategy-cta-band {
+  position: relative;
+  z-index: 2;
+  background: var(--kowhai);
+  color: var(--accent-ink);
+  padding: 64px 0;
+  border-top: 1px solid rgba(20,16,8,0.1);
+}
+.strategy-cta-band a.btn-primary { background: var(--ink); color: var(--bg); }
+.strategy-cta-band a.btn-primary:hover { background: #000; }
