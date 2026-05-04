@@ -10,7 +10,7 @@ import { CSSProperties, useMemo } from 'react'
  *   - 'medium'    → page-head shaders on Toi Māori / Pasifika
  *   - 'subtle'    → ambient wash behind inner page-heads
  */
-export type ShaderPalette = 'aotearoa' | 'maori' | 'pasifika' | 'paper' | 'ink'
+export type ShaderPalette = 'aotearoa' | 'maori' | 'pasifika' | 'paper' | 'ink' | 'nightsky'
 
 const PALETTES: Record<ShaderPalette, string[]> = {
   // Sun-on-water — warm Aotearoa morning. Kowhai gold flowing through paper.
@@ -20,12 +20,14 @@ const PALETTES: Record<ShaderPalette, string[]> = {
   // Te Moana-nui-a-Kiwa — Pacific ocean currents, deep moana with pohutukawa sunset.
   pasifika: ['#0a3f50', '#1E5F74', '#67A9C6', '#E8A317', '#C8463C'],
   // Editorial cream — barely-there breathing on a paper backdrop.
-  // Mostly cream, with one tiny breath of kowhai and one of moana — never saturated.
   paper:    ['#fffdf7', '#fbf9f3', '#f5f0e3', '#fbf3dc', '#eef4f6'],
-  // Dark ambient for dark sections — adds a warm kowhai breath
-  // and a deep moana shadow so the tonal variance reads as motion,
-  // not flat black.
+  // Dark ambient for dark sections — adds a warm kowhai breath and a deep
+  // moana shadow so the tonal variance reads as motion, not flat black.
   ink:      ['#0e0c08', '#1a1612', '#3a342c', '#5a3d12', '#0e1a20'],
+  // Deep-space nebula — near-black with hints of indigo, deep moana,
+  // a whisper of kowhai aurora and pohutukawa nebula bloom. For the
+  // Pacific Strategy constellation.
+  nightsky: ['#020410', '#050d20', '#0a1a3a', '#1a2855', '#3a1830'],
 }
 
 interface ShaderBackgroundProps {
@@ -77,8 +79,10 @@ export function ShaderBackground({
         style={{ width: '100%', height: '100%' }}
       />
       {/* soft fade-to-content at bottom so type stays readable.
-          Lighter for paper palette (already pale), heavier for vivid ones. */}
-      {palette !== 'paper' && palette !== 'ink' && (
+          Lighter for paper palette (already pale), heavier for vivid ones.
+          Skipped entirely for dark palettes (ink, nightsky) so the night-sky
+          mood survives. */}
+      {palette !== 'paper' && palette !== 'ink' && palette !== 'nightsky' && (
         <div
           style={{
             position: 'absolute',

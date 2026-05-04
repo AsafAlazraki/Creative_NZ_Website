@@ -9,25 +9,25 @@ import { ShaderBackground } from './ShaderBackground'
 // ────────────────────────────────────────────────────────────────────
 
 const STAR_RADIUS: Record<Star['kind'], number> = {
-  guiding: 14,
-  vision: 16,
-  aspiration: 7,
-  value: 8,
-  support: 6,
+  guiding: 22,
+  vision: 26,
+  aspiration: 12,
+  value: 14,
+  support: 10,
 }
 const STAR_GLOW: Record<Star['kind'], number> = {
-  guiding: 38,
-  vision: 44,
-  aspiration: 16,
-  value: 18,
-  support: 12,
+  guiding: 80,
+  vision: 95,
+  aspiration: 38,
+  value: 44,
+  support: 28,
 }
 const STAR_COLOR: Record<Star['kind'], string> = {
-  guiding: '#FBE6A2',     // bright amber
+  guiding: '#FFD96B',     // bright amber/kowhai
   vision: '#FFFFFF',
-  aspiration: '#E8E0B0',
-  value: '#9DD0E8',
-  support: '#C9D8E8',
+  aspiration: '#FFE9A8',
+  value: '#A8D4F0',
+  support: '#D8E5F2',
 }
 
 const REVEAL_RANGE = 0.05  // how long the fade-in lasts in scroll progress
@@ -67,58 +67,90 @@ function StarNode({
       tabIndex={0}
       className="strategy-star-group"
     >
+      {/* outermost diffuse halo */}
+      <motion.circle
+        cx={star.x}
+        cy={star.y}
+        r={glowR * 1.5}
+        fill={color}
+        opacity={isActive ? 0.18 : 0.08}
+        animate={{ opacity: [isActive ? 0.18 : 0.06, isActive ? 0.32 : 0.14, isActive ? 0.18 : 0.06] }}
+        transition={{ duration: 5 + (isHero ? 0 : 2), repeat: Infinity, ease: 'easeInOut' }}
+        style={{ filter: 'blur(28px)' }}
+      />
       {/* outer glow */}
       <motion.circle
         cx={star.x}
         cy={star.y}
         r={glowR}
         fill={color}
-        opacity={isActive ? 0.32 : 0.14}
+        opacity={isActive ? 0.45 : 0.22}
         animate={{
-          opacity: [isActive ? 0.34 : 0.12, isActive ? 0.5 : 0.22, isActive ? 0.34 : 0.12],
+          opacity: [isActive ? 0.45 : 0.18, isActive ? 0.7 : 0.36, isActive ? 0.45 : 0.18],
         }}
         transition={{ duration: 4 + (isHero ? 0 : 2), repeat: Infinity, ease: 'easeInOut' }}
-        style={{ filter: 'blur(8px)' }}
+        style={{ filter: 'blur(14px)' }}
       />
-      {/* inner halo ring (guiding stars only) */}
+      {/* halo ring (guiding stars + vision) */}
       {isHero && (
-        <motion.circle
-          cx={star.x}
-          cy={star.y}
-          r={r + 8}
-          fill="none"
-          stroke={color}
-          strokeOpacity={0.5}
-          strokeWidth={1}
-          animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0.15, 0.6] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: `${star.x}px ${star.y}px` }}
-        />
+        <>
+          <motion.circle
+            cx={star.x}
+            cy={star.y}
+            r={r + 14}
+            fill="none"
+            stroke={color}
+            strokeOpacity={0.8}
+            strokeWidth={1.4}
+            animate={{ scale: [1, 1.35, 1], opacity: [0.85, 0, 0.85] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeOut' }}
+            style={{ transformOrigin: `${star.x}px ${star.y}px` }}
+          />
+          <motion.circle
+            cx={star.x}
+            cy={star.y}
+            r={r + 10}
+            fill="none"
+            stroke={color}
+            strokeOpacity={0.5}
+            strokeWidth={1}
+            animate={{ scale: [1, 1.55, 1], opacity: [0.55, 0, 0.55] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeOut', delay: 1.5 }}
+            style={{ transformOrigin: `${star.x}px ${star.y}px` }}
+          />
+        </>
       )}
-      {/* core */}
+      {/* core (with cross-spike for hero stars) */}
       <circle
         cx={star.x}
         cy={star.y}
         r={r}
         fill={color}
-        style={{ filter: isHero ? `drop-shadow(0 0 6px ${color})` : undefined }}
+        style={{ filter: `drop-shadow(0 0 ${isHero ? 16 : 8}px ${color})` }}
       />
-      {/* idle twinkle */}
+      {isHero && (
+        <g style={{ pointerEvents: 'none' }}>
+          {/* 4-point starburst spikes */}
+          <line x1={star.x - r * 3} y1={star.y} x2={star.x + r * 3} y2={star.y} stroke={color} strokeWidth={0.8} strokeOpacity={0.7} strokeLinecap="round" />
+          <line x1={star.x} y1={star.y - r * 3} x2={star.x} y2={star.y + r * 3} stroke={color} strokeWidth={0.8} strokeOpacity={0.7} strokeLinecap="round" />
+        </g>
+      )}
+      {/* bright core hot-spot */}
       <motion.circle
         cx={star.x}
         cy={star.y}
-        r={r * 0.5}
+        r={r * 0.55}
         fill="#fff"
-        animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 2 + (star.id.charCodeAt(0) % 4) * 0.5, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       {/* label */}
       <foreignObject
-        x={star.x - 140}
-        y={star.y + r + 10}
-        width={280}
-        height={70}
+        x={star.x - 180}
+        y={star.y + r + 14}
+        width={360}
+        height={100}
         style={{ pointerEvents: 'none' }}
       >
         <div
@@ -126,16 +158,30 @@ function StarNode({
             textAlign: 'center',
             color: '#fff',
             fontFamily: 'var(--font-display)',
-            fontSize: isHero ? 18 : 13,
+            fontSize: isHero ? (star.kind === 'guiding' ? 32 : 28) : 16,
             fontWeight: isHero ? 500 : 400,
-            letterSpacing: isHero ? '0.04em' : 0,
-            lineHeight: 1.25,
-            textShadow: '0 1px 8px rgba(0,0,0,0.5)',
+            letterSpacing: isHero ? '0.06em' : '0.01em',
+            lineHeight: 1.18,
+            textShadow: '0 2px 16px rgba(0,0,0,0.85), 0 0 32px rgba(0,0,0,0.6)',
           }}
         >
-          <div style={{ fontStyle: isHero ? 'normal' : 'italic' }}>{star.label}</div>
+          <div style={{
+            fontStyle: isHero ? 'normal' : 'italic',
+            textTransform: star.kind === 'guiding' ? 'uppercase' : 'none',
+            color: star.kind === 'guiding' ? '#FFD96B' : '#fff',
+          }}>
+            {star.label}
+          </div>
           {star.sublabel && (
-            <div style={{ fontSize: isHero ? 11 : 10, opacity: 0.6, fontFamily: 'var(--font-mono)', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 2 }}>
+            <div style={{
+              fontSize: isHero ? 11 : 10,
+              opacity: 0.68,
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              marginTop: 6,
+              fontWeight: 600,
+            }}>
               {star.sublabel}
             </div>
           )}
@@ -176,21 +222,33 @@ function LineNode({
   const opacity = useTransform(
     scrollProgress,
     [line.revealAt, line.revealAt + REVEAL_RANGE],
-    [0, line.weight === 'medium' ? 0.45 : 0.22]
+    [0, line.weight === 'medium' ? 0.85 : 0.45]
   )
 
   const d = `M ${from.x} ${from.y} L ${to.x} ${to.y}`
 
   return (
-    <motion.path
-      d={d}
-      stroke="#FBE6A2"
-      strokeWidth={line.weight === 'medium' ? 1.4 : 0.8}
-      strokeLinecap="round"
-      strokeDasharray="2 4"
-      fill="none"
-      style={{ pathLength, opacity }}
-    />
+    <>
+      {/* Soft glow layer */}
+      <motion.path
+        d={d}
+        stroke="#FFD96B"
+        strokeWidth={line.weight === 'medium' ? 6 : 3}
+        strokeLinecap="round"
+        fill="none"
+        style={{ pathLength, opacity, filter: 'blur(4px)' }}
+      />
+      {/* Crisp dashed line */}
+      <motion.path
+        d={d}
+        stroke="#FFE9A8"
+        strokeWidth={line.weight === 'medium' ? 1.6 : 1}
+        strokeLinecap="round"
+        strokeDasharray="3 6"
+        fill="none"
+        style={{ pathLength, opacity }}
+      />
+    </>
   )
 }
 
@@ -293,6 +351,50 @@ function DetailPanel({ star, onClose }: { star: Star; onClose: () => void }) {
 }
 
 // ────────────────────────────────────────────────────────────────────
+// Shooting stars — occasional streak across the sky
+// ────────────────────────────────────────────────────────────────────
+
+function ShootingStars() {
+  // Three streaks, each on its own staggered loop
+  const streaks = [
+    { delay: 2, duration: 1.6, top: '12%', repeatDelay: 14 },
+    { delay: 7, duration: 1.4, top: '38%', repeatDelay: 18 },
+    { delay: 11, duration: 1.8, top: '64%', repeatDelay: 22 },
+  ]
+  return (
+    <div aria-hidden="true" style={{
+      position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 2,
+    }}>
+      {streaks.map((s, i) => (
+        <motion.div
+          key={i}
+          initial={{ x: '-10%', opacity: 0 }}
+          animate={{ x: '110%', opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: s.duration,
+            ease: 'easeOut',
+            delay: s.delay,
+            repeat: Infinity,
+            repeatDelay: s.repeatDelay,
+          }}
+          style={{
+            position: 'absolute',
+            top: s.top,
+            left: 0,
+            width: 240,
+            height: 2,
+            background: 'linear-gradient(to right, transparent 0%, rgba(255,217,107,0) 0%, rgba(255,217,107,0.85) 70%, #fff 100%)',
+            borderRadius: 999,
+            transform: 'rotate(-12deg)',
+            filter: 'drop-shadow(0 0 6px rgba(255,217,107,0.9))',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ────────────────────────────────────────────────────────────────────
 // Foundation strip — bottom dark band
 // ────────────────────────────────────────────────────────────────────
 
@@ -380,16 +482,44 @@ export function PacificStrategyConstellation() {
         {/* Sticky-scroll constellation */}
         <div ref={sectionRef} className="strategy-scroll">
           <div className="strategy-sticky">
-            <ShaderBackground palette="pasifika" intensity="subtle" speed={0.06} />
-            {/* fixed star-field background — random tiny static stars */}
+            {/* Layer 1 — deep space shader (no paper fade in nightsky mode) */}
+            <ShaderBackground palette="nightsky" intensity="subtle" speed={0.04} />
+
+            {/* Layer 2 — nebula bloom radial gradients */}
+            <div className="strategy-nebula" aria-hidden="true">
+              <div className="strategy-nebula-blob strategy-nebula-blob--moana" />
+              <div className="strategy-nebula-blob strategy-nebula-blob--pohutukawa" />
+              <div className="strategy-nebula-blob strategy-nebula-blob--kowhai" />
+            </div>
+
+            {/* Layer 3 — dense star-field (250 stars, varying brightness) */}
             <svg className="strategy-stars-bg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
-              {Array.from({ length: 90 }).map((_, i) => {
-                const x = Math.floor((i * 173) % 1600)
-                const y = Math.floor((i * 263) % 1000)
-                const r = (i % 5 === 0) ? 1.2 : 0.7
-                return <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={0.18} />
+              {Array.from({ length: 250 }).map((_, i) => {
+                const x = ((i * 211) % 1600)
+                const y = ((i * 367) % 1000)
+                const tier = i % 11
+                const r = tier === 0 ? 1.8 : tier < 3 ? 1.2 : 0.6
+                const opacity = tier === 0 ? 0.95 : tier < 3 ? 0.65 : 0.32
+                return <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={opacity} />
+              })}
+              {/* twinkling brighter stars */}
+              {Array.from({ length: 18 }).map((_, i) => {
+                const x = ((i * 467) % 1600)
+                const y = ((i * 277) % 1000)
+                return (
+                  <motion.circle
+                    key={`tw-${i}`}
+                    cx={x} cy={y} r={1.4}
+                    fill="#fff"
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 2 + (i % 5), repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+                  />
+                )
               })}
             </svg>
+
+            {/* Layer 4 — shooting stars (occasional) */}
+            <ShootingStars />
 
             {/* The constellation itself */}
             <svg

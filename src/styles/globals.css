@@ -1150,10 +1150,53 @@ body { padding-top: 68px; }
 
 /* ── Pacific Strategy constellation ────────── */
 .strategy-section {
-  background: linear-gradient(180deg, #061320 0%, #0a1c2a 50%, #061320 100%);
+  background:
+    radial-gradient(ellipse at 25% 20%, rgba(58, 24, 100, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(20, 70, 100, 0.18) 0%, transparent 55%),
+    linear-gradient(180deg, #020410 0%, #050d20 40%, #030814 80%, #020410 100%);
   color: #fff;
   position: relative;
   overflow: hidden;
+}
+
+/* nebula bloom blobs that drift slowly behind the constellation */
+.strategy-nebula {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.strategy-nebula-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  animation: nebulaDrift 28s ease-in-out infinite;
+}
+.strategy-nebula-blob--moana {
+  width: 60vw; height: 60vw;
+  top: -20%; left: -10%;
+  background: radial-gradient(circle, rgba(60, 110, 180, 0.55) 0%, transparent 70%);
+  animation-duration: 36s;
+}
+.strategy-nebula-blob--pohutukawa {
+  width: 45vw; height: 45vw;
+  bottom: -15%; right: -10%;
+  background: radial-gradient(circle, rgba(180, 60, 90, 0.45) 0%, transparent 70%);
+  animation-duration: 42s;
+  animation-delay: -8s;
+}
+.strategy-nebula-blob--kowhai {
+  width: 35vw; height: 35vw;
+  top: 30%; right: 15%;
+  background: radial-gradient(circle, rgba(232, 163, 23, 0.32) 0%, transparent 70%);
+  animation-duration: 50s;
+  animation-delay: -16s;
+}
+@keyframes nebulaDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(4%, -3%) scale(1.08); }
+  66%      { transform: translate(-3%, 4%) scale(0.95); }
 }
 .strategy-intro {
   padding: 96px var(--pad) 24px;
