@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { IMAGES, OPPORTUNITIES, STORIES } from '@/data'
 import { KoruCorner, KoruBand, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
-import { ShaderBackground } from '@/components/effects/ShaderBackground'
 import { NoiseGrain } from '@/components/effects/NoiseGrain'
 import { OceanWaves } from '@/components/effects/OceanWaves'
 import { SiapoPattern, SiapoDivider } from '@/components/effects/SiapoPattern'
@@ -50,13 +49,12 @@ export default function ToiPasifikaPage() {
     <div className="toi-pasifika-page">
       <Breadcrumbs trail={[{ label: 'Home', path: '/' }, { label: 'Toi Pasifika' }]} />
 
-      {/* Page head — deep moana with prominent Siapo (tapa cloth) overlay */}
+      {/* Page head — deep moana linear gradient + prominent Siapo (tapa cloth)
+          overlay. Removed the WebGL ShaderBackground (canvas) here so the
+          Siapo pattern is the only visible cultural-cloth treatment. */}
       <section className="hero hero--pasifika" style={{ minHeight: 540 }}>
-        {/* Soft shader for breathing tonal motion */}
-        <ShaderBackground palette="pasifika" intensity="medium" speed={0.08} />
-        <NoiseGrain opacity={0.08} blendMode="overlay" />
-        {/* Prominent Siapo (tapa cloth) pattern — much more visible than before */}
-        <SiapoPattern variant="diamonds" color="#ffffff" opacity={0.09} size={72} />
+        <NoiseGrain opacity={0.06} blendMode="overlay" />
+        <SiapoPattern variant="diamonds" color="#ffffff" opacity={0.10} size={72} />
         <KoruCorner position="bl" size={300} color="var(--pohutukawa)" opacity={0.10} />
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>

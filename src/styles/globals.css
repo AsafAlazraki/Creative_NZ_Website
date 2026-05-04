@@ -2966,3 +2966,15 @@ body.has-open-opps .fb-cta {
 @media (max-width: 768px) {
   .opp-recent li { grid-template-columns: 1fr; gap: 4px; }
 }
+
+/* ── Hide aspiration labels by default; reveal on hover/active (Round 5) ─── */
+.strategy-star-label[data-kind="aspiration"] {
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.strategy-star-group:hover .strategy-star-label[data-kind="aspiration"],
+.strategy-star-label[data-kind="aspiration"][data-active="true"] {
+  opacity: 1;
+}
+/* Guiding / vision / value / support stars keep their labels visible
+   — these are the structural framework, not the secondary aspirations. */

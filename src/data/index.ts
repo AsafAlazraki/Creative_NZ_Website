@@ -37,10 +37,10 @@ export interface Stat {
 }
 
 export const STATS: Stat[] = [
-  { value: 88, suffix: '%', label: 'of New Zealanders say arts contribute to our identity', kupu: 'tuakiri' },
-  { value: 38.4, prefix: '$', suffix: 'M', label: 'invested in artists & organisations last year', kupu: 'haumi' },
-  { value: 1247, label: 'projects funded across Aotearoa', kupu: 'kaupapa' },
-  { value: 73, suffix: '%', label: 'of adults attended an arts event in the past year', kupu: 'haerenga' },
+  { value: 74,   suffix: '%',  label: 'of New Zealanders say arts contribute to our identity', kupu: 'tuakiri' },
+  { value: 160,  prefix: '$',  suffix: 'M+', label: 'invested in the arts last year via CNZ + partner channels', kupu: 'haumi' },
+  { value: 2400, suffix: '+',  label: 'projects funded across Aotearoa', kupu: 'kaupapa' },
+  { value: 69,   suffix: '%',  label: 'of adults attended an arts event in the past year', kupu: 'haerenga' },
 ];
 
 export interface FundingTier {

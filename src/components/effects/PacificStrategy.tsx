@@ -233,6 +233,9 @@ function StarNode({
       />
 
       {/* Label */}
+      {/* Label — aspiration labels are hidden by default to prevent the
+         top-of-canvas overlap. They reveal on hover/active via the
+         .strategy-star-label CSS class with [data-kind] guards. */}
       <foreignObject
         x={star.x - 200}
         y={star.y + r + 14}
@@ -240,15 +243,20 @@ function StarNode({
         height={90}
         pointerEvents="none"
       >
-        <div style={{
-          textAlign: 'center', color: '#fff',
-          fontFamily: 'var(--font-display)',
-          fontSize: isHero ? (star.kind === 'guiding' ? 30 : 22) : 14,
-          fontWeight: isHero ? 500 : 400,
-          letterSpacing: isHero ? '0.04em' : '0.01em',
-          lineHeight: 1.18,
-          textShadow: '0 2px 16px rgba(0,0,0,0.85)',
-        }}>
+        <div
+          className="strategy-star-label"
+          data-kind={star.kind}
+          data-active={isActive ? 'true' : 'false'}
+          style={{
+            textAlign: 'center', color: '#fff',
+            fontFamily: 'var(--font-display)',
+            fontSize: isHero ? (star.kind === 'guiding' ? 30 : 22) : 14,
+            fontWeight: isHero ? 500 : 400,
+            letterSpacing: isHero ? '0.04em' : '0.01em',
+            lineHeight: 1.18,
+            textShadow: '0 2px 16px rgba(0,0,0,0.85)',
+          }}
+        >
           <div style={{
             fontStyle: isHero ? 'normal' : 'italic',
             textTransform: star.kind === 'guiding' ? 'uppercase' : 'none',
@@ -792,7 +800,9 @@ export function PacificStrategyConstellation() {
         <div ref={sectionRef} className="strategy-canvas-wrap" aria-hidden={false}>
           <div className="strategy-bg">
             <ShaderBackground palette="nightsky" intensity="subtle" speed={0.04} />
-            <NebulaLayer scrollProgress={scrollYProgress} />
+            {/* NebulaLayer removed — colored blob bloom was competing with
+                the constellation reading. Static star-field + nightsky
+                shader is sufficient atmosphere. */}
             <svg className="strategy-stars-bg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
               {Array.from({ length: 250 }).map((_, i) => {
                 const x = ((i * 211) % 1600)

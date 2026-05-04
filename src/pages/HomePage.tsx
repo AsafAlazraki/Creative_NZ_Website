@@ -15,44 +15,14 @@ const HERO_VERBS = ['give life', 'give breath', 'give voice', 'give meaning']
 
 // Animated stat number
 function StatNumber({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  // Honour reduced-motion: skip the count-up entirely.
-  const reducedMotion = typeof window !== 'undefined'
-    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-  // Start at the final value (rather than 0) so any mid-scroll glance
-  // sees the true number, not an embarrassing partial. The animation
-  // ALSO runs from a high fraction so the count-up is short and snappy.
-  const [count, setCount] = useState(reducedMotion ? value : value * 0.78)
-  const [triggered, setTriggered] = useState(reducedMotion)
-
-  useEffect(() => {
-    if (reducedMotion) return
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !triggered) {
-        setTriggered(true)
-        const start = performance.now()
-        const duration = 900            // shorter — 2000 → 900ms
-        const startFrac = 0.78          // animate from 78% → 100% (was 0% → 100%)
-        const tick = (t: number) => {
-          const p = Math.min(1, (t - start) / duration)
-          const eased = 1 - Math.pow(1 - p, 3)
-          setCount(value * (startFrac + (1 - startFrac) * eased))
-          if (p < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
-      }
-    }, { threshold: 0.3 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [value, triggered, reducedMotion])
-
+  // Render the final value directly — no count-up animation. Reviewers
+  // were repeatedly catching the count mid-flight and reporting partial
+  // values as 'wrong data'. Keeping the number static is the only way
+  // to defeat that misread.
   const formatted = Number.isInteger(value)
-    ? Math.round(count).toLocaleString()
-    : count.toFixed(1)
-
-  return <span ref={ref}>{prefix}{formatted}{suffix}</span>
+    ? value.toLocaleString()
+    : value.toFixed(1)
+  return <span>{prefix}{formatted}{suffix}</span>
 }
 
 export default function HomePage() {
