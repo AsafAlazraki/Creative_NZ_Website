@@ -16,21 +16,29 @@ const HERO_VERBS = ['give life', 'give breath', 'give voice', 'give meaning']
 // Animated stat number
 function StatNumber({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
-  const [count, setCount] = useState(0)
-  const [triggered, setTriggered] = useState(false)
+  // Honour reduced-motion: skip the count-up entirely.
+  const reducedMotion = typeof window !== 'undefined'
+    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  // Start at the final value (rather than 0) so any mid-scroll glance
+  // sees the true number, not an embarrassing partial. The animation
+  // ALSO runs from a high fraction so the count-up is short and snappy.
+  const [count, setCount] = useState(reducedMotion ? value : value * 0.78)
+  const [triggered, setTriggered] = useState(reducedMotion)
 
   useEffect(() => {
+    if (reducedMotion) return
     const el = ref.current
     if (!el) return
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting && !triggered) {
         setTriggered(true)
         const start = performance.now()
-        const duration = 2000
+        const duration = 900            // shorter — 2000 → 900ms
+        const startFrac = 0.78          // animate from 78% → 100% (was 0% → 100%)
         const tick = (t: number) => {
           const p = Math.min(1, (t - start) / duration)
           const eased = 1 - Math.pow(1 - p, 3)
-          setCount(value * eased)
+          setCount(value * (startFrac + (1 - startFrac) * eased))
           if (p < 1) requestAnimationFrame(tick)
         }
         requestAnimationFrame(tick)
@@ -38,7 +46,7 @@ function StatNumber({ value, prefix = '', suffix = '' }: { value: number; prefix
     }, { threshold: 0.3 })
     io.observe(el)
     return () => io.disconnect()
-  }, [value, triggered])
+  }, [value, triggered, reducedMotion])
 
   const formatted = Number.isInteger(value)
     ? Math.round(count).toLocaleString()

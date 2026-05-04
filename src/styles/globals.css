@@ -265,9 +265,10 @@ p { margin: 0; }
   border-bottom-color: rgba(255,255,255,0.06);
 }
 .floatbar.scrolled .floatbar-pill {
-  background: rgba(255,253,247,0.94);
+  /* More opaque on scroll so large article headlines don't ghost through */
+  background: rgba(255,253,247,0.985);
   box-shadow: 0 8px 40px rgba(20,16,8,0.08), 0 1px 0 rgba(20,16,8,0.06);
-  border-top: 2px solid var(--kowhai);   /* §06: scrolled-state brand anchor */
+  border-top: 2px solid var(--kowhai);
 }
 [data-theme="dark"] .floatbar.scrolled .floatbar-pill {
   background: rgba(14,12,8,0.96);
@@ -1121,7 +1122,16 @@ body { padding-top: 68px; }
   transition: all 0.18s;
 }
 .stepper .step.active { background: var(--card); color: var(--ink); border-top-color: var(--accent); font-weight: 500; }
-.stepper .step.done { color: var(--bush); border-top-color: var(--bush); }
+.stepper .step.done {
+  color: var(--bush);
+  border-top-color: var(--bush);
+  background: rgba(63,94,58,0.06);
+}
+.stepper .step.done .num::before {
+  content: '✓ ';
+  color: var(--bush);
+  font-weight: 700;
+}
 .stepper .step .num { display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
 
 /* ── People grid ────────────────────── */
@@ -2203,7 +2213,9 @@ main[id="main-content"]:focus { outline: none; }
 /* §3 — Slide-in node detail panel from the right */
 .strategy-node-panel {
   position: fixed;
-  top: 0;
+  /* Sits below the floatbar so the navbar stays visible/usable while the
+     panel is open — also keeps the close button clear of the nav. */
+  top: 68px;
   right: 0;
   bottom: 0;
   width: clamp(320px, 32vw, 440px);
@@ -2886,4 +2898,71 @@ body.has-open-opps .fb-cta {
 }
 .strategy-node-panel-tag {
   margin: 0 36px 24px !important;
+}
+
+/* ── Opportunity detail extra sections (R4 fix #8) ─────── */
+.opp-faq {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+}
+.opp-faq:last-of-type { border-bottom: 1px solid var(--line); }
+.opp-faq summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-right: 4px;
+}
+.opp-faq summary::-webkit-details-marker { display: none; }
+.opp-faq summary::after {
+  content: '+';
+  font-family: var(--font-mono);
+  color: var(--accent-2);
+  font-size: 22px;
+  font-weight: 400;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.opp-faq[open] summary::after { transform: rotate(45deg); }
+.opp-faq p {
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.65;
+  margin-top: 12px;
+}
+
+.opp-recent { list-style: none; padding: 0; margin: 0 0 8px; }
+.opp-recent li {
+  display: grid;
+  grid-template-columns: 120px 1fr 2fr;
+  gap: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  align-items: baseline;
+}
+.opp-recent li:last-child { border-bottom: 1px solid var(--line); }
+.opp-recent-amt {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink);
+}
+.opp-recent-recip {
+  font-weight: 500;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.opp-recent-proj {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+@media (max-width: 768px) {
+  .opp-recent li { grid-template-columns: 1fr; gap: 4px; }
 }

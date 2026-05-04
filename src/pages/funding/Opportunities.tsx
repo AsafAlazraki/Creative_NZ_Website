@@ -137,16 +137,30 @@ export default function Opportunities() {
               </button>
             ))}
             <span style={{ width: 1, background: 'var(--line)', margin: '2px 4px' }} />
-            {(['all', ...allTiers] as string[]).map(t => (
-              <button
-                key={t}
-                className={`pill${tierFilter === t ? ' on' : ''}`}
-                onClick={() => setTierFilter(t)}
-                style={{ textTransform: 'capitalize' }}
-              >
-                {t === 'all' ? 'All tiers' : t}
-              </button>
-            ))}
+            {(['all', ...allTiers] as string[]).map(t => {
+              // Tier id → human-readable label (with macrons / proper casing)
+              const TIER_LABEL: Record<string, string> = {
+                all: 'All tiers',
+                maori: 'Māori',
+                pasifika: 'Pasifika',
+                community: 'Community',
+                early: 'Early career',
+                artists: 'Artists',
+                orgs: 'Organisations',
+                literature: 'Literature',
+                dance: 'Dance',
+                craft: 'Craft',
+              }
+              return (
+                <button
+                  key={t}
+                  className={`pill${tierFilter === t ? ' on' : ''}`}
+                  onClick={() => setTierFilter(t)}
+                >
+                  {TIER_LABEL[t] ?? t.charAt(0).toUpperCase() + t.slice(1)}
+                </button>
+              )
+            })}
           </motion.div>
 
           {/* Result count */}

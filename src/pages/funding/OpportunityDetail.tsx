@@ -241,7 +241,51 @@ export default function OpportunityDetail() {
               </p>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.25}>
+            <ScrollReveal delay={0.22}>
+              <h3 style={{ marginTop: 48, marginBottom: 20 }}>Frequently asked</h3>
+              <details className="opp-faq">
+                <summary>How long do applications take to review?</summary>
+                <p>Decisions are made within 8 weeks of the round closing. You'll be notified by email of the outcome and feedback.</p>
+              </details>
+              <details className="opp-faq">
+                <summary>Can I apply if I've received CNZ funding before?</summary>
+                <p>Yes. Existing recipients and new applicants are both welcome. Your application will be assessed on its own merits against the published criteria.</p>
+              </details>
+              <details className="opp-faq">
+                <summary>Do I need letters of support?</summary>
+                <p>For projects involving collaborators, partners or specific venues, letters of support strengthen your application but are not always required.</p>
+              </details>
+              <details className="opp-faq">
+                <summary>What if I miss the deadline?</summary>
+                <p>Late applications cannot be accepted. Subscribe to the funding alert to hear when the next round opens.</p>
+              </details>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.28}>
+              <h3 style={{ marginTop: 48, marginBottom: 16 }}>Recently funded under this scheme</h3>
+              <ul className="opp-recent">
+                <li>
+                  <span className="opp-recent-amt">$48,000</span>
+                  <span className="opp-recent-recip">Whetūrangi Theatre Collective</span>
+                  <span className="opp-recent-proj">A new bilingual work for Auckland Arts Festival 2027</span>
+                </li>
+                <li>
+                  <span className="opp-recent-amt">$24,500</span>
+                  <span className="opp-recent-recip">Mereana Hudson</span>
+                  <span className="opp-recent-proj">Solo painting exhibition exploring whakapapa through landscape</span>
+                </li>
+                <li>
+                  <span className="opp-recent-amt">$32,000</span>
+                  <span className="opp-recent-recip">Pasifika Sound Lab</span>
+                  <span className="opp-recent-proj">Album of contemporary Pacific electronic music</span>
+                </li>
+              </ul>
+              <Link to="/funding/results" className="btn-link" style={{ marginTop: 12, display: 'inline-block' }}>
+                See all funded projects →
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.32}>
               <div style={{ marginTop: 48, padding: 28, background: 'var(--surface)', borderRadius: 'var(--r)', border: '1px solid var(--line)' }}>
                 <h4 style={{ marginBottom: 10, fontSize: 18 }}>Read our application advice</h4>
                 <p style={{ color: 'var(--muted)', fontSize: 15, margin: '0 0 16px' }}>

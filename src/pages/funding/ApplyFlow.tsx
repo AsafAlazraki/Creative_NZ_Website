@@ -363,18 +363,37 @@ export default function ApplyFlow() {
                     Review the information you've entered. Return to any step to make changes before submitting.
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    {STEPS.slice(0, 4).map((s, i) => (
-                      <div key={i} style={{
-                        padding: 20, border: '1px solid var(--line)', borderRadius: 'var(--r)',
-                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      }}>
-                        <div>
-                          <div style={{ fontFamily: 'var(--font-display)', fontSize: 18 }}>{s.name}</div>
-                          <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 2 }}>{s.sub}</div>
+                    {STEPS.slice(0, 4).map((s, i) => {
+                      // Build a one-line preview of what the user has entered for each step.
+                      let preview = ''
+                      if (i === 0) preview = allEligible ? 'All four eligibility criteria met' : 'Not yet confirmed'
+                      else if (i === 1) preview = [form.legalName, form.region].filter(Boolean).join(' · ') || 'Not yet filled'
+                      else if (i === 2) preview = form.projectTitle || 'No project title yet'
+                      else if (i === 3) preview = 'Budget breakdown'
+                      return (
+                        <div key={i} style={{
+                          padding: 20, border: '1px solid var(--line)', borderRadius: 'var(--r-md)',
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
+                        }}>
+                          <div style={{ minWidth: 0, flex: 1 }}>
+                            <div style={{ fontFamily: 'var(--font-display)', fontSize: 18 }}>{s.name}</div>
+                            <div style={{
+                              fontSize: 13, color: 'var(--muted)', marginTop: 4,
+                              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                            }}>
+                              {preview}
+                            </div>
+                          </div>
+                          <button
+                            className="btn btn-ghost"
+                            style={{ padding: '8px 16px', fontSize: 13, flexShrink: 0 }}
+                            onClick={() => setStep(i)}
+                          >
+                            Edit
+                          </button>
                         </div>
-                        <button className="btn-link" onClick={() => setStep(i)}>Edit →</button>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                   <div style={{ marginTop: 32, padding: 24, background: 'var(--surface)', borderRadius: 'var(--r)' }}>
                     <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer' }}>
