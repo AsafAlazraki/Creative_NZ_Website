@@ -6,6 +6,7 @@ import { ShaderBackground } from '@/components/effects/ShaderBackground'
 import { NoiseGrain } from '@/components/effects/NoiseGrain'
 import { OceanWaves } from '@/components/effects/OceanWaves'
 import { SiapoPattern, SiapoDivider } from '@/components/effects/SiapoPattern'
+import { PacificStrategyConstellation } from '@/components/effects/PacificStrategy'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 const PASIFIKA_OPPS = OPPORTUNITIES.filter(o => o.tier === 'pasifika')
@@ -168,40 +169,8 @@ export default function ToiPasifikaPage() {
         </div>
       </section>
 
-      {/* Strategy pillars */}
-      <section className="section" style={{ background: 'var(--paper)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
-        <div className="container">
-          <ScrollReveal>
-            <div className="section-head">
-              <div>
-                <span className="eyebrow">Ngā ara · The pathways</span>
-                <h2 style={{ marginTop: 16 }}>Four strategic priorities for Pacific arts</h2>
-              </div>
-            </div>
-          </ScrollReveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
-            {STRATEGY_PILLARS.map((pillar, i) => (
-              <motion.div
-                key={pillar.title}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-30px' }}
-                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: i * 0.09 }}
-                style={{
-                  padding: 32,
-                  background: 'var(--card)',
-                  border: '1px solid var(--line)',
-                  borderRadius: 'var(--r-md)',
-                  borderLeft: '4px solid var(--moana)',
-                }}
-              >
-                <h3 style={{ fontSize: 20, marginBottom: 14 }}>{pillar.title}</h3>
-                <p style={{ fontSize: 14.5, lineHeight: 1.72, color: 'var(--ink-2)', margin: 0 }}>{pillar.body}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Strategy as a constellation — interactive, scroll-driven */}
+      <PacificStrategyConstellation />
 
       {/* Pacific nations */}
       <section className="section-tight" style={{ borderBottom: '1px solid var(--line)' }}>
