@@ -24,6 +24,11 @@
   --sand: #E8DCC4;
   --siapo: #6B4423;
 
+  /* Brand tints — for full-palette section backgrounds */
+  --bush-tint:   #eef2ee;
+  --kowhai-tint: #fdf5e0;
+  --moana-tint:  #e8eef1;
+
   /* Accent */
   --accent: var(--kowhai);
   --accent-ink: #1a1208;
@@ -260,6 +265,7 @@ p { margin: 0; }
 .floatbar.scrolled .floatbar-pill {
   background: rgba(255,253,247,0.94);
   box-shadow: 0 8px 40px rgba(20,16,8,0.08), 0 1px 0 rgba(20,16,8,0.06);
+  border-top: 2px solid var(--kowhai);   /* §06: scrolled-state brand anchor */
 }
 [data-theme="dark"] .floatbar.scrolled .floatbar-pill {
   background: rgba(14,12,8,0.96);
@@ -302,9 +308,16 @@ p { margin: 0; }
   transition: background 0.15s, color 0.15s;
   text-decoration: none;
 }
-.fb-link:hover, .fb-link.active, .fb-link.open {
+.fb-link:hover, .fb-link.open {
   background: var(--paper-2);
   color: var(--ink);
+}
+.fb-link.active {
+  color: var(--ink);
+  background: transparent;
+  border-bottom: 2px solid var(--kowhai);
+  border-radius: 0;
+  padding-bottom: 8px;
 }
 .fb-chev {
   opacity: 0.5;
@@ -324,6 +337,7 @@ p { margin: 0; }
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid rgba(28,27,29,0.08);
+  border-left: 3px solid var(--kowhai);   /* §06: kowhai accent stripe */
   border-radius: 16px;
   box-shadow: 0 16px 48px rgba(20,16,8,0.12), 0 4px 12px rgba(20,16,8,0.06);
   padding: 8px;
@@ -756,12 +770,19 @@ body { padding-top: 68px; }
 
 /* ── Stats band ─────────────────────── */
 .stats-band {
-  background: var(--ink);
-  color: var(--bg);
+  /* Moana ownership — full-palette section identity (§02) */
+  background: var(--moana);
+  color: #ffffff;
   padding: calc(96px * var(--density)) var(--pad);
   position: relative;
   overflow: hidden;
 }
+.stats-band h2 { color: #ffffff !important; }
+.stats-band .stat .num { color: #ffffff; }
+.stats-band .stat .lbl { color: rgba(255,255,255,0.78); }
+.stats-band .stat .kupu { color: rgba(255,255,255,0.5); }
+.stats-band .eyebrow { color: var(--kowhai) !important; }
+.stats-band .eyebrow::before { background: var(--kowhai); }
 .stats-band-inner { max-width: var(--maxw); margin: 0 auto; }
 .stats-band h2 { font-weight: 300; max-width: 720px; margin-bottom: 64px; color: var(--bg); }
 .stats-grid {
@@ -961,13 +982,15 @@ body { padding-top: 68px; }
 
 /* ── Pasifika band ──────────────────── */
 .pasifika-band {
-  background: var(--paper);
+  /* Bush-tint ownership — full-palette section identity (§02) */
+  background: var(--bush-tint);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: calc(88px * var(--density)) 0;
   position: relative;
   overflow: hidden;
 }
+.pasifika-tile:hover { border-color: var(--bush) !important; }
 .pasifika-band-inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1664,3 +1687,245 @@ main[id="main-content"]:focus { outline: none; }
 @media (max-width: 540px) {
   .news-grid--3   { grid-template-columns: 1fr; }
 }
+
+/* ── Touch-device hover override (§E) ─────────
+   Disables transform-based hover effects on touch devices to prevent
+   the "sticky hover" problem (hover state activates on first tap and
+   stays until next tap). Touch users get :active feedback instead.
+*/
+@media (hover: none) {
+  .card:hover,
+  .pasifika-tile:hover,
+  .opp-row:hover,
+  .ncard:hover,
+  .tier-card:hover,
+  .ncard:hover .ncard-img img,
+  .card:hover .card-img img,
+  .ncard--feature:hover .ncard-img img {
+    transform: none;
+    box-shadow: var(--shadow-1);
+  }
+  .footer-social-btn:hover { transform: none; }
+  .opp-row:hover .arrow { transform: none; }
+  .cal-bar:hover { transform: translateY(-50%); filter: none; box-shadow: none; }
+}
+@media (hover: none) {
+  .card:active, .pasifika-tile:active, .opp-row:active, .ncard:active {
+    background: var(--paper);
+  }
+  .btn:active { opacity: 0.86; }
+}
+
+/* Page-head colour variants (§02 — full palette) */
+.page-head--moana {
+  background: linear-gradient(160deg, var(--moana) 0%, #134453 100%);
+  color: #ffffff;
+}
+.page-head--moana .eyebrow,
+.page-head--moana h1,
+.page-head--moana .lede {
+  color: #ffffff !important;
+}
+.page-head--moana .eyebrow { color: var(--kowhai) !important; }
+.page-head--moana .eyebrow::before { background: var(--kowhai); }
+.page-head--moana .lede { color: rgba(255,255,255,0.85) !important; }
+.page-head--moana .btn-ghost {
+  border-color: rgba(255,255,255,0.4);
+  color: #ffffff;
+}
+.page-head--moana .btn-ghost:hover {
+  background: #ffffff;
+  color: var(--moana);
+  border-color: #ffffff;
+}
+
+/* ── Typography — Fraunces variable axes (§04) ────── */
+
+/* Eyebrow refinement */
+.eyebrow {
+  letter-spacing: 0.22em;
+  font-variation-settings: 'wght' 500;
+}
+
+/* Hero headline — light/italic split via .light + .accent spans */
+.hero h1 .light {
+  font-variation-settings: 'wght' 250, 'opsz' 96;
+  font-weight: 250;
+}
+.hero h1 .accent {
+  font-variation-settings: 'wght' 400, 'opsz' 72;
+  font-style: italic;
+}
+
+/* Stats numerals — ultra-light, max optical size */
+.stat .num {
+  font-variation-settings: 'wght' 250, 'opsz' 144;
+  font-weight: 250 !important;
+}
+
+/* Pull-quote utility class for narrative sections */
+.pull-quote {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 40px);
+  font-style: italic;
+  font-variation-settings: 'wght' 300, 'opsz' 36;
+  color: var(--ink-2);
+  border-left: 3px solid var(--kowhai);
+  padding-left: 28px;
+  margin: 48px 0;
+  line-height: 1.32;
+  max-width: 760px;
+}
+
+/* Footer mihi dramatic treatment */
+.footer-mihi {
+  font-size: clamp(28px, 3.5vw, 48px) !important;
+  font-variation-settings: 'wght' 250, 'opsz' 48;
+  font-style: italic;
+  line-height: 1.3 !important;
+}
+
+/* ── Footer redesign — dark variant (§08) ─────── */
+.footer.footer--ink {
+  background: var(--ink);
+  color: rgba(255,255,255,0.85);
+  border-top: none;
+}
+.footer--ink .footer-mihi { color: #ffffff; }
+.footer--ink .footer-mihi-en {
+  font-size: 15px;
+  color: rgba(255,255,255,0.55);
+  font-style: italic;
+  margin-bottom: 64px;
+}
+.footer--ink .footer-cols h4 {
+  color: rgba(255,255,255,0.5);
+}
+.footer--ink .footer-cols a,
+.footer--ink .footer-cols li {
+  color: rgba(255,255,255,0.78);
+}
+.footer--ink .footer-cols a:hover { color: var(--kowhai); }
+
+.footer--ink .footer-social-btn {
+  background: transparent;
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.78);
+}
+.footer--ink .footer-social-btn:hover {
+  background: var(--kowhai);
+  color: var(--accent-ink);
+  border-color: var(--kowhai);
+}
+
+.footer-koru-decor {
+  position: absolute;
+  top: 8px;
+  right: 8%;
+  width: 320px;
+  height: 320px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Back-to-top button in funder bottom row */
+.footer-back-top {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  transition: color 0.2s;
+}
+.footer-back-top:hover { color: var(--kowhai); }
+
+/* ── Section transitions (§05) ────────────────── */
+
+/* Diagonal bridge between two coloured sections */
+.section-bridge--diagonal {
+  height: 80px;
+  background: linear-gradient(to bottom right, var(--bg) 50%, var(--paper) 50%);
+  margin-top: -1px;
+}
+.section-bridge--paper-to-moana {
+  height: 100px;
+  background: linear-gradient(to bottom, var(--paper) 0%, var(--moana) 100%);
+}
+
+/* Hero image fade-out at bottom — ties into page bg */
+.hero-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 70%, var(--bg) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Imagery treatment system (§09) ─────────────── */
+
+/* Subtle moana tint on all card images for unified colour temperature */
+.card-img { position: relative; }
+.card-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(30,95,116,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Hero image — kowhai gold left-edge accent */
+.hero-img::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 4px;
+  background: var(--kowhai);
+  z-index: 2;
+  border-radius: 2px;
+}
+
+/* Card image hover — slow scale + subtle warmth */
+.card:hover .card-img img {
+  filter: brightness(1.05) saturate(1.1);
+  transition: transform 0.8s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease;
+}
+
+/* ── Mobile-specific fixes (§B) ─────────────────── */
+
+/* §B.2 — extra-small phone stat sizing */
+@media (max-width: 375px) {
+  .stat .num { font-size: 32px !important; }
+}
+
+/* §B.3 — floatbar overflow guard at narrow widths */
+@media (max-width: 380px) {
+  .floatbar-pill { overflow: hidden; }
+  .floatbar-brand { max-width: calc(100% - 120px); overflow: hidden; }
+  .floatbar-logo { max-height: 28px; }
+}
+
+/* §B.6 — pasifika tiles single-column at ≤600px (was ≤480px) */
+@media (max-width: 600px) {
+  .pasifika-tiles { grid-template-columns: 1fr !important; }
+}
+
+/* §B.7 — iOS momentum scrolling on sub-nav */
+.subnav-inner { -webkit-overflow-scrolling: touch; }
+
+/* §C — 900px breakpoint for news-grid */
+@media (max-width: 900px) {
+  .news-grid:not(.news-grid--3) { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* §C — responsive --pad token at every breakpoint */
+@media (max-width: 1024px) { :root { --pad: 28px; } }
+@media (max-width: 768px)  { :root { --pad: 20px; } }

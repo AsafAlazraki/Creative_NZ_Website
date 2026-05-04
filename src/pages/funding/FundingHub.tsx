@@ -20,8 +20,8 @@ export default function FundingHub() {
     <>
       <SubNav items={SUB_ITEMS} />
 
-      <div className="page-head" style={{ position: 'relative', overflow: 'hidden' }}>
-        <KoruCorner position="tr" size={320} color="var(--kowhai)" opacity={0.07} />
+      <div className="page-head page-head--moana" style={{ position: 'relative', overflow: 'hidden' }}>
+        <KoruCorner position="tr" size={320} color="var(--kowhai)" opacity={0.10} />
         <div className="container">
           <motion.span
             className="eyebrow"

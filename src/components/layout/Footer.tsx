@@ -11,12 +11,31 @@ const SOCIALS = [
   { label: 'YouTube',   href: 'https://www.youtube.com/user/CreativeNewZealand',      Icon: YoutubeIcon },
 ]
 
+function handleBackToTop() {
+  const reduced = typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' })
+}
+
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer footer--ink">
       <div className="motif-strip" style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
         <span /><span /><span /><span /><span />
       </div>
+
+      {/* Large decorative koru in top-right (§08) */}
+      <svg
+        className="footer-koru-decor"
+        viewBox="0 0 120 120"
+        aria-hidden="true"
+      >
+        <path
+          d="M 60 100 C 60 100 24 92 24 58 C 24 32 42 20 60 20 C 78 20 90 32 90 50 C 90 68 78 76 66 76 C 54 76 46 68 46 60 C 46 52 54 48 58 48 C 62 48 66 52 66 56"
+          fill="none" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round"
+        />
+        <circle cx="66" cy="56" r="3.5" fill="#ffffff" />
+      </svg>
 
       <div className="footer-inner">
         <p className="footer-mihi">{SITE.whakatauki.text}</p>
@@ -73,7 +92,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Dark "funded by" band — mirrors creativenz.govt.nz */}
+      {/* Funder band — flows naturally on the now-dark footer */}
       <div className="footer-funder-band">
         <div className="footer-funder-inner">
           <span className="footer-funder-eyebrow">Creative New Zealand is funded by</span>
@@ -84,6 +103,9 @@ export default function Footer() {
               <a href="#" onClick={e => e.preventDefault()}>Privacy</a>
               <a href="#" onClick={e => e.preventDefault()}>Accessibility</a>
               <a href="#" onClick={e => e.preventDefault()}>Copyright</a>
+              <button onClick={handleBackToTop} className="footer-back-top" aria-label="Back to top">
+                Back to top ↑
+              </button>
             </div>
           </div>
         </div>
