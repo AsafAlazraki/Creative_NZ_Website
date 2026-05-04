@@ -2353,3 +2353,83 @@ main[id="main-content"]:focus { outline: none; }
 @media (max-width: 900px) {
   .strategy-prompt { top: 16px; left: 16px; font-size: 12px; padding: 10px 12px 10px 14px; }
 }
+
+/* §9 — Cultural context (i) icon button + panel */
+.strategy-info-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.78);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.strategy-info-btn:hover,
+.strategy-info-btn[aria-expanded="true"] {
+  background: var(--kowhai);
+  color: var(--accent-ink);
+  border-color: var(--kowhai);
+}
+.strategy-info-panel {
+  position: absolute;
+  top: 72px;
+  right: 24px;
+  z-index: 6;
+  width: clamp(280px, 32vw, 380px);
+  background: rgba(14, 12, 8, 0.96);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  color: rgba(255,255,255,0.82);
+  font-size: 14px;
+  line-height: 1.65;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+}
+.strategy-info-panel p { margin: 0 0 14px; }
+.strategy-info-panel p:last-of-type { margin-bottom: 0; }
+.strategy-info-panel-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-variation-settings: 'wght' 350, 'opsz' 36;
+  font-size: 22px;
+  color: #fff;
+  margin: 0 0 14px;
+  padding-right: 24px;
+}
+.strategy-info-panel-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  border-radius: 4px;
+}
+.strategy-info-panel-close:hover { color: var(--kowhai); }
+.strategy-info-source {
+  margin-top: 18px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+}
+@media (max-width: 600px) {
+  .strategy-info-btn   { top: 16px; right: 16px; }
+  .strategy-info-panel { top: 60px; right: 16px; left: 16px; width: auto; }
+}

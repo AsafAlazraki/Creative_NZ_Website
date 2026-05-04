@@ -368,6 +368,71 @@ function TriangleFramework({ drawn }: { drawn: boolean }) {
 }
 
 // ────────────────────────────────────────────────────────────────────
+// CulturalContext (§9) — (i) icon + popover explaining the Pasifika
+// wayfinding metaphor, so the star navigation makes sense to all users.
+// ────────────────────────────────────────────────────────────────────
+
+function CulturalContext() {
+  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        aria-label={open ? 'Close cultural context' : 'About this metaphor'}
+        aria-expanded={open}
+        className="strategy-info-btn"
+      >
+        <Info size={14} aria-hidden="true" />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="strategy-context-title"
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.96 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="strategy-info-panel"
+          >
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+              className="strategy-info-panel-close"
+            >
+              <X size={14} />
+            </button>
+            <h4 id="strategy-context-title" className="strategy-info-panel-title">
+              Navigating by the stars
+            </h4>
+            <p>
+              Pacific peoples have navigated Te Moana-nui-a-Kiwa — the vast
+              Pacific Ocean — by reading the stars for thousands of years.
+            </p>
+            <p>
+              This strategy map uses that metaphor: the stars are our
+              aspirations, the constellation of concepts is our vessel, and
+              the connections between them chart our course.
+            </p>
+            <p className="strategy-info-source">
+              Inspired by the Pacific Arts Strategy — Creative New Zealand · Toi Aotearoa
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
+
+// ────────────────────────────────────────────────────────────────────
 // PromptCard (§5) — top-left discovery affordance
 // ────────────────────────────────────────────────────────────────────
 
@@ -650,6 +715,9 @@ export function PacificStrategyConstellation() {
                 <PromptCard onDismiss={dismissPrompt} />
               )}
             </AnimatePresence>
+
+            {/* §9 — Cultural context (i) tooltip, top-right */}
+            <CulturalContext />
 
             <svg
               className="strategy-canvas"
