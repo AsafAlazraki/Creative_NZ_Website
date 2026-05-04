@@ -5,7 +5,6 @@ import { KoruCorner, KoruBand, ScrollReveal, MagneticHover } from '@/components/
 import { NoiseGrain } from '@/components/effects/NoiseGrain'
 import { OceanWaves } from '@/components/effects/OceanWaves'
 import { SiapoPattern, SiapoDivider } from '@/components/effects/SiapoPattern'
-import { PacificStrategyConstellation } from '@/components/effects/PacificStrategy'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 const PASIFIKA_OPPS = OPPORTUNITIES.filter(o => o.tier === 'pasifika')
@@ -176,9 +175,6 @@ export default function ToiPasifikaPage() {
           </div>
         </div>
       </section>
-
-      {/* Strategy as a constellation — interactive, scroll-driven */}
-      <PacificStrategyConstellation />
 
       {/* Pacific nations */}
       <section className="section-tight" style={{ borderBottom: '1px solid var(--line)' }}>

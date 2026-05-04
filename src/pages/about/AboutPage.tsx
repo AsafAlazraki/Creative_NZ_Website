@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { IMAGES } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
+import { PacificStrategyConstellation } from '@/components/effects/PacificStrategy'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import SubNav from '@/components/ui/SubNav'
 
@@ -199,6 +200,11 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Strategy as a constellation — interactive star-map of how the
+          organisation's strategy fits together. Lives on /about because
+          it's the structural framework, not Pasifika-specific. */}
+      <PacificStrategyConstellation />
     </>
   )
 }
