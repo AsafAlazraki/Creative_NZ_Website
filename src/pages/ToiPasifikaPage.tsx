@@ -47,86 +47,96 @@ const STRATEGY_PILLARS = [
 
 export default function ToiPasifikaPage() {
   return (
-    <>
+    <div className="toi-pasifika-page">
       <Breadcrumbs trail={[{ label: 'Home', path: '/' }, { label: 'Toi Pasifika' }]} />
 
-      {/* Page head — moana shader, deep Pacific currents */}
-      <section style={{
-        background: 'var(--moana)',
-        color: '#fff',
-        padding: 'calc(72px * var(--density)) 0 calc(56px * var(--density))',
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: 480,
-      }}>
-        <ShaderBackground palette="pasifika" intensity="hero" speed={0.14} />
-        <NoiseGrain opacity={0.10} blendMode="overlay" />
-        <SiapoPattern variant="rays" color="#fff" opacity={0.04} size={64} />
-        <KoruCorner position="tr" size={420} color="#fff" opacity={0.06} />
-        <KoruCorner position="bl" size={300} color="var(--pohutukawa)" opacity={0.12} />
+      {/* Page head — deep moana with prominent Siapo (tapa cloth) overlay */}
+      <section className="hero hero--pasifika" style={{ minHeight: 540 }}>
+        {/* Soft shader for breathing tonal motion */}
+        <ShaderBackground palette="pasifika" intensity="medium" speed={0.08} />
+        <NoiseGrain opacity={0.08} blendMode="overlay" />
+        {/* Prominent Siapo (tapa cloth) pattern — much more visible than before */}
+        <SiapoPattern variant="diamonds" color="#ffffff" opacity={0.09} size={72} />
+        <KoruCorner position="bl" size={300} color="var(--pohutukawa)" opacity={0.10} />
+
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65 }}
-            style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}
-          >
-            <span style={{
-              display: 'inline-block',
-              background: 'rgba(255,255,255,0.2)',
-              color: '#fff',
-              fontSize: 10.5,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              padding: '5px 14px',
-              borderRadius: 'var(--r-pill)',
-              backdropFilter: 'blur(8px)',
-            }}>
-              Toi Pasifika
-            </span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em' }}>
-              Te Moana-nui-a-Kiwa
-            </span>
-          </motion.div>
-          <motion.h1
-            style={{ color: '#fff', marginBottom: 24, maxWidth: 800 }}
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.06 }}
-          >
-            The living arts of the{' '}
-            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.82)' }}>Pacific.</span>
-          </motion.h1>
-          <motion.p
-            style={{ fontSize: 19, lineHeight: 1.62, color: 'rgba(255,255,255,0.78)', maxWidth: 720, marginBottom: 40 }}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
-          >
-            Pacific arts are woven into the identity of Aotearoa. Creative New Zealand has a dedicated Pacific arts board, dedicated funding streams, and a refreshed strategy for ensuring Pacific artists and communities can flourish.
-          </motion.p>
-          <motion.div
-            style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.2 }}
-          >
-            <MagneticHover strength={0.2}>
-              <Link to="/funding/opportunities" className="btn btn-primary" style={{ background: '#fff', color: 'var(--moana)' }}>
-                Find funding →
-              </Link>
-            </MagneticHover>
-            <MagneticHover strength={0.2}>
-              <Link to="/resources" className="btn btn-ghost" style={{ borderColor: 'rgba(255,255,255,0.35)', color: '#fff' }}>
-                Pacific Arts Strategy
-              </Link>
-            </MagneticHover>
-          </motion.div>
+          <div className="hero-grid">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}
+              >
+                <span style={{
+                  display: 'inline-block',
+                  background: 'rgba(255,255,255,0.18)',
+                  color: '#fff',
+                  fontSize: 10.5,
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  padding: '6px 14px',
+                  borderRadius: 'var(--r-pill)',
+                  backdropFilter: 'blur(8px)',
+                }}>
+                  Toi Pasifika
+                </span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.1em' }}>
+                  Te Moana-nui-a-Kiwa
+                </span>
+              </motion.div>
+              <motion.h1
+                style={{ color: '#fff', marginBottom: 24, maxWidth: 720 }}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.04 }}
+              >
+                The living arts of the{' '}
+                <span style={{ fontStyle: 'italic', color: 'var(--kowhai)' }}>Pacific.</span>
+              </motion.h1>
+              <motion.p
+                className="lede"
+                style={{ color: 'rgba(255,255,255,0.85)', maxWidth: 580, marginBottom: 32 }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                Pacific arts are woven into the identity of Aotearoa. Creative New Zealand has a dedicated Pacific arts board, dedicated funding streams, and a refreshed strategy for ensuring Pacific artists and communities flourish.
+              </motion.p>
+              <motion.div
+                style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.16 }}
+              >
+                <MagneticHover strength={0.2}>
+                  <Link to="/funding/opportunities" className="btn btn-primary" style={{ background: 'var(--kowhai)', color: 'var(--accent-ink)' }}>
+                    Find funding →
+                  </Link>
+                </MagneticHover>
+                <Link to="#strategy" className="btn-link" style={{ color: 'rgba(255,255,255,0.85)', borderBottomColor: 'var(--kowhai)' }}>
+                  Pacific Arts Strategy →
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Right column — Pacific arts hero image */}
+            <motion.div
+              className="hero-img"
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+              style={{ aspectRatio: '4/5' }}
+            >
+              <img src={IMAGES.pasifika} alt="Pacific arts community in Aotearoa" loading="eager" />
+              <span className="credit">Pacific arts community · Te Moana-nui-a-Kiwa</span>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Wave transition out of moana hero */}
+      {/* Wave transition out of hero */}
       <div style={{ background: 'var(--moana)' }}>
         <OceanWaves color="#fff" opacity={0.5} height={100} speed={0.6} lines={4} />
       </div>
@@ -321,6 +331,6 @@ export default function ToiPasifikaPage() {
           </div>
         </section>
       </ScrollReveal>
-    </>
+    </div>
   )
 }

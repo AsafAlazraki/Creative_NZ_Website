@@ -2727,3 +2727,51 @@ h3 { font-variation-settings: 'wght' 380, 'opsz' 36; }
 }
 .fb-dropdown::-webkit-scrollbar { width: 6px; }
 .fb-dropdown::-webkit-scrollbar-thumb { background: rgba(20,16,8,0.18); border-radius: 4px; }
+
+/* ── Toi Pasifika hero variant (full-bleed Siapo + image right) ── */
+.hero--pasifika {
+  background: linear-gradient(155deg, #0e3a5a 0%, var(--moana) 60%, #0a2c43 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  padding: calc(80px * var(--density)) 0 calc(72px * var(--density));
+}
+.hero--pasifika .hero-img {
+  border-radius: var(--r-md);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  position: relative;
+}
+.hero--pasifika .hero-img::before { display: none; }   /* drop the kowhai edge bar — clashes with moana */
+.hero--pasifika .credit { color: rgba(255,255,255,0.65); }
+.hero--pasifika .btn-link { color: rgba(255,255,255,0.85); }
+.hero--pasifika .btn-link:hover { color: var(--kowhai); }
+
+/* ── Toi Māori hero variant (deep pōuri + kowhai glow) ── */
+.hero--maori {
+  background: #1a1208;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  padding: calc(80px * var(--density)) 0 calc(72px * var(--density));
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.hero--maori::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 88% 50%, rgba(232,163,23,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+.hero--maori .hero-img {
+  border-radius: var(--r-md);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+}
+.hero--maori .hero-img::before { display: none; }
+.hero--maori .credit { color: rgba(255,255,255,0.55); }
+
+/* §P1 — Hero text intro is too slow on first paint;
+   ensure no extra animation-delay sneaks in */
+.hero h1, .hero p.lede, .hero .eyebrow {
+  content-visibility: visible;
+}

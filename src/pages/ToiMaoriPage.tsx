@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { IMAGES, OPPORTUNITIES } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
-import { ShaderBackground } from '@/components/effects/ShaderBackground'
 import { NoiseGrain } from '@/components/effects/NoiseGrain'
 import { DriftingKoru } from '@/components/effects/DriftingKoru'
 import { OceanWaves } from '@/components/effects/OceanWaves'
@@ -36,80 +35,87 @@ const PILLARS = [
 
 export default function ToiMaoriPage() {
   return (
-    <>
+    <div className="toi-maori-page">
       <Breadcrumbs trail={[{ label: 'Home', path: '/' }, { label: 'Ngā Toi Māori' }]} />
 
-      {/* Page head — dark with kowhai accents and shader flow */}
-      <section style={{
-        background: 'var(--ink)',
-        color: 'var(--bg)',
-        padding: 'calc(72px * var(--density)) 0 calc(56px * var(--density))',
-        position: 'relative',
-        overflow: 'hidden',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        minHeight: 480,
-      }}>
-        <ShaderBackground palette="maori" intensity="hero" speed={0.12} />
+      {/* Page head — deep pōuri (dark earth) with restrained kowhai glow,
+          big drifting koru watermarks, no overpowering shader blob */}
+      <section className="hero hero--maori" style={{ minHeight: 540 }}>
         <DriftingKoru parallax={true} color="var(--kowhai)" />
         <NoiseGrain opacity={0.10} blendMode="overlay" />
         <KoruCorner position="tr" size={420} color="var(--kowhai)" opacity={0.08} />
-        <KoruCorner position="bl" size={280} color="var(--kowhai)" opacity={0.04} />
+
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65 }}
-            style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}
-          >
-            <span style={{
-              display: 'inline-block',
-              background: 'var(--kowhai)',
-              color: 'var(--accent-ink)',
-              fontSize: 10.5,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              padding: '5px 14px',
-              borderRadius: 'var(--r-pill)',
-            }}>
-              Ngā Toi Māori
-            </span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>
-              Toi Aotearoa
-            </span>
-          </motion.div>
-          <motion.h1
-            style={{ marginBottom: 24, color: 'var(--bg)', maxWidth: 800 }}
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.06 }}
-          >
-            Te Hā o ngā Toi —{' '}
-            <span style={{ color: 'var(--kowhai)', fontStyle: 'italic' }}>the breath of the arts.</span>
-          </motion.h1>
-          <motion.p
-            style={{ fontSize: 19, lineHeight: 1.62, color: 'rgba(255,255,255,0.72)', maxWidth: 720, marginBottom: 40 }}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
-          >
-            Ngā toi Māori are the arts traditions of tangata whenua — the first people of Aotearoa. Creative New Zealand has a dedicated Māori arts board, dedicated funding, and a long-term strategy for nurturing ngā toi Māori as living, evolving expressions of Māori identity and knowledge.
-          </motion.p>
-          <motion.div
-            style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.2 }}
-          >
-            <MagneticHover strength={0.2}>
-              <Link to="/funding/opportunities" className="btn btn-accent">Find funding →</Link>
-            </MagneticHover>
-            <MagneticHover strength={0.2}>
-              <Link to="/resources" className="btn btn-ghost" style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'var(--bg)' }}>
-                Te Hā o ngā Toi strategy
-              </Link>
-            </MagneticHover>
-          </motion.div>
+          <div className="hero-grid">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}
+              >
+                <span style={{
+                  display: 'inline-block',
+                  background: 'var(--kowhai)',
+                  color: 'var(--accent-ink)',
+                  fontSize: 10.5,
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  padding: '6px 14px',
+                  borderRadius: 'var(--r-pill)',
+                }}>
+                  Ngā Toi Māori
+                </span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.1em' }}>
+                  Toi Aotearoa
+                </span>
+              </motion.div>
+              <motion.h1
+                style={{ marginBottom: 24, color: '#fff', maxWidth: 720 }}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.04 }}
+              >
+                Te Hā o ngā Toi —{' '}
+                <span style={{ color: 'var(--kowhai)', fontStyle: 'italic' }}>the breath of the arts.</span>
+              </motion.h1>
+              <motion.p
+                className="lede"
+                style={{ color: 'rgba(255,255,255,0.78)', maxWidth: 580, marginBottom: 32 }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                Ngā toi Māori are the arts traditions of tangata whenua. Creative New Zealand has a dedicated Māori arts board, dedicated funding, and a long-term strategy for nurturing ngā toi Māori as living, evolving expressions of Māori identity and knowledge.
+              </motion.p>
+              <motion.div
+                style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.16 }}
+              >
+                <MagneticHover strength={0.2}>
+                  <Link to="/funding/opportunities" className="btn btn-accent">Find funding →</Link>
+                </MagneticHover>
+                <Link to="/resources" className="btn-link" style={{ color: 'rgba(255,255,255,0.85)', borderBottomColor: 'var(--kowhai)' }}>
+                  Te Hā o ngā Toi strategy →
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Right column — Māori arts hero image */}
+            <motion.div
+              className="hero-img"
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+              style={{ aspectRatio: '4/5' }}
+            >
+              <img src={IMAGES.carving} alt="Ngā toi Māori — wood carving" loading="eager" />
+              <span className="credit">Whakairo · Toi Māori</span>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -262,6 +268,6 @@ export default function ToiMaoriPage() {
           </div>
         </section>
       </ScrollReveal>
-    </>
+    </div>
   )
 }
