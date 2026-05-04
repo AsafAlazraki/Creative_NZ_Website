@@ -175,6 +175,24 @@ function StarNode({
           style={{ transformOrigin: `${star.x}px ${star.y}px` }}
         />
       )}
+      {/* §5 — Sonar pulse on guiding stars only (drives discovery without
+         drowning the canvas). Staggered per-star via star.id char code. */}
+      {star.kind === 'guiding' && (
+        <motion.circle
+          cx={star.x} cy={star.y} r={r + 4}
+          fill="none" stroke={color}
+          strokeWidth={1}
+          initial={{ opacity: 0 }}
+          animate={{ scale: [1, 2.6, 2.6], opacity: [0.55, 0, 0] }}
+          transition={{
+            duration: 2.4,
+            repeat: Infinity,
+            ease: 'easeOut',
+            delay: (star.id.charCodeAt(0) % 7) * 0.4,
+          }}
+          style={{ transformOrigin: `${star.x}px ${star.y}px` }}
+        />
+      )}
       {/* Core */}
       <circle
         cx={star.x} cy={star.y} r={r}
@@ -243,8 +261,137 @@ function StarNode({
 }
 
 // ────────────────────────────────────────────────────────────────────
-// NodePanel — slide-in from right when a star is clicked (§3)
+// TriangleFramework (§2) — visual pyramid drawn over the right-side
+// stars (vision / purpose-values / focus-areas / strategies-policies /
+// mata-alii). The five existing stars become the layer markers; this
+// component traces the pyramid outline + horizontal divider lines
+// + labels each layer with its strategic role.
 // ────────────────────────────────────────────────────────────────────
+
+function TriangleFramework({ drawn }: { drawn: boolean }) {
+  // Apex at vision (1380, 200), base spanning strategies-policies
+  // (1080, 720) → te-waka-toi (1430, 700). Build the outline + 4 cross
+  // dividers (one per layer).
+  const apex = { x: 1380, y: 160 }
+  const baseL = { x: 980,  y: 760 }
+  const baseR = { x: 1520, y: 760 }
+  const dividers = [
+    { y: 360, label: 'Purpose & values', sub: 'Including Mana Pasifika' },
+    { y: 510, label: 'Strategic focus', sub: 'Resilience · Access · Wellbeing' },
+    { y: 640, label: 'Te Waka Toi Pātaka', sub: 'Mātauranga Māori framework' },
+  ]
+
+  // Linear interp along each side of the triangle to find x for a given y
+  const lerpX = (y: number, side: 'l' | 'r') => {
+    const target = side === 'l' ? baseL : baseR
+    const t = (y - apex.y) / (target.y - apex.y)
+    return apex.x + (target.x - apex.x) * t
+  }
+
+  // Path lengths control the draw-in animation
+  const sideLen = Math.hypot(apex.x - baseL.x, apex.y - baseL.y)
+  return (
+    <g aria-hidden="true">
+      {/* Triangle outline */}
+      <g style={{ opacity: drawn ? 1 : 0, transition: 'opacity 0.8s 0.4s ease' }}>
+        <path
+          d={`M ${apex.x} ${apex.y} L ${baseL.x} ${baseL.y} L ${baseR.x} ${baseR.y} Z`}
+          fill="none"
+          stroke="#FFD96B"
+          strokeOpacity={0.18}
+          strokeWidth={1.2}
+          strokeDasharray="2 6"
+          style={{
+            strokeDashoffset: drawn ? 0 : sideLen * 3,
+            transition: 'stroke-dashoffset 1.8s 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
+        {/* Horizontal layer dividers */}
+        {dividers.map((d, i) => {
+          const lx = lerpX(d.y, 'l')
+          const rx = lerpX(d.y, 'r')
+          return (
+            <g key={i}>
+              <line
+                x1={lx} y1={d.y} x2={rx} y2={d.y}
+                stroke="#FFD96B"
+                strokeOpacity={0.12}
+                strokeWidth={0.8}
+                strokeDasharray="2 5"
+              />
+              <foreignObject x={rx + 12} y={d.y - 18} width={220} height={42} pointerEvents="none">
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 9.5,
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(255,217,107,0.7)',
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  textShadow: '0 1px 8px rgba(0,0,0,0.8)',
+                }}>
+                  {d.label}
+                </div>
+                <div style={{
+                  fontFamily: 'var(--font-display)',
+                  fontStyle: 'italic',
+                  fontSize: 11.5,
+                  color: 'rgba(255,255,255,0.55)',
+                  whiteSpace: 'nowrap',
+                  marginTop: 2,
+                  textShadow: '0 1px 6px rgba(0,0,0,0.7)',
+                }}>
+                  {d.sub}
+                </div>
+              </foreignObject>
+            </g>
+          )
+        })}
+        {/* Apex label */}
+        <foreignObject x={apex.x - 80} y={apex.y - 56} width={160} height={50} pointerEvents="none">
+          <div style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 9.5,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,217,107,0.85)',
+            fontWeight: 700,
+            textAlign: 'center',
+            textShadow: '0 1px 8px rgba(0,0,0,0.8)',
+          }}>
+            Apex · Vision
+          </div>
+        </foreignObject>
+      </g>
+    </g>
+  )
+}
+
+// ────────────────────────────────────────────────────────────────────
+// PromptCard (§5) — top-left discovery affordance
+// ────────────────────────────────────────────────────────────────────
+
+const PROMPT_DISMISSED_KEY = 'cnz.strategyPromptDismissed'
+
+function PromptCard({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <motion.div
+      className="strategy-prompt"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -6 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      role="status"
+      aria-live="polite"
+    >
+      <span className="strategy-prompt-icon">✦</span>
+      <span className="strategy-prompt-text">Tap any star to explore the strategy</span>
+      <button onClick={onDismiss} aria-label="Dismiss" className="strategy-prompt-close">
+        <X size={14} />
+      </button>
+    </motion.div>
+  )
+}
 
 function NodePanel({ star, onClose }: { star: Star; onClose: () => void }) {
   const accent = NODE_ACCENT[star.id] ?? STAR_COLOR[star.kind]
@@ -418,6 +565,16 @@ export function PacificStrategyConstellation() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selected = selectedId ? lookupStar(selectedId) : null
 
+  // §5 — Prompt card: dismissed flag persisted across the session
+  const [promptDismissed, setPromptDismissed] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return sessionStorage.getItem(PROMPT_DISMISSED_KEY) === '1'
+  })
+  const dismissPrompt = () => {
+    setPromptDismissed(true)
+    try { sessionStorage.setItem(PROMPT_DISMISSED_KEY, '1') } catch {}
+  }
+
   return (
     <>
       <section className="strategy-section" aria-labelledby="strategy-heading">
@@ -487,6 +644,13 @@ export function PacificStrategyConstellation() {
           </div>
 
           <div ref={canvasRef} className="strategy-canvas-inner">
+            {/* §5 — Discovery prompt card, top-left, dismissible */}
+            <AnimatePresence>
+              {!promptDismissed && drawn && (
+                <PromptCard onDismiss={dismissPrompt} />
+              )}
+            </AnimatePresence>
+
             <svg
               className="strategy-canvas"
               viewBox="0 0 1600 1000"
@@ -494,7 +658,9 @@ export function PacificStrategyConstellation() {
               role="img"
               aria-label="Pacific Arts Strategy constellation. Tap any star to open its description."
             >
-              {/* Curved dotted connections (§1) */}
+              {/* §2 — Triangle framework outlining the right-side cluster */}
+              <TriangleFramework drawn={drawn} />
+              {/* §1 — Curved dotted connections */}
               {LINES.map((l, i) => (
                 <ConnectionLine key={i} fromId={l.from} toId={l.to} weight={l.weight} drawn={drawn} />
               ))}
@@ -504,11 +670,16 @@ export function PacificStrategyConstellation() {
                   key={star.id}
                   star={star}
                   drawn={drawn}
-                  onClick={setSelectedId}
+                  onClick={(id) => { setSelectedId(id); dismissPrompt() }}
                   isActive={selectedId === star.id}
                 />
               ))}
             </svg>
+
+            {/* Keyboard nav hint for screen readers */}
+            <span className="sr-only">
+              Use Tab to move between strategy elements, Enter or Space to expand a star, Escape to close.
+            </span>
           </div>
         </div>
 
