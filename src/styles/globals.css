@@ -313,8 +313,7 @@ p { margin: 0; }
 .fb-dropdown {
   position: absolute;
   top: calc(100% + 12px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   min-width: 340px;
   z-index: 200;
 }
