@@ -148,14 +148,17 @@ function FoundationStrip() {
 
 function Pillar({ pillar, index }: { pillar: Pillar; index: number }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: false, margin: '-30% 0px -30% 0px' })
+  // once: true → fade in on first appearance, then stay visible.
+  // The margin pulls the trigger inward so the reveal lands well before
+  // the pillar reaches the centre of the viewport.
+  const inView = useInView(ref, { once: true, margin: '-20% 0px -20% 0px' })
 
   return (
     <section ref={ref} className="strategy-pillar" data-pillar={pillar.id}>
       <div className="container strategy-pillar-inner">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="strategy-pillar-text"
         >
@@ -170,7 +173,7 @@ function Pillar({ pillar, index }: { pillar: Pillar; index: number }) {
 
         <motion.div
           initial={{ opacity: 0, x: 40 }}
-          animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
+          animate={inView ? { opacity: 1, x: 0 } : undefined}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           aria-hidden="true"
           className="strategy-pillar-number"
