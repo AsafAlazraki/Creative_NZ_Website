@@ -84,20 +84,20 @@ export default function NewsIndex() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* Feature story */}
+              {/* Feature story — magazine-lede dark card */}
               {feature && (
                 <ScrollReveal>
-                  <Link to={`/news/${feature.id}`} className="ncard news-feature" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center', marginBottom: 64, paddingBottom: 64, borderBottom: '1px solid var(--line)' }}>
-                    <div className="ncard-img" style={{ margin: 0, aspectRatio: '4/3', borderRadius: 'var(--r-md)' }}>
+                  <Link to={`/news/${feature.id}`} className="ncard news-feature">
+                    <div className="ncard-img">
                       <img src={feature.img} alt={feature.title} />
                     </div>
                     <div>
                       <div className="cat">{feature.cat}{feature.kupu ? ` · ${feature.kupu}` : ''}</div>
-                      <h2 style={{ margin: '12px 0 18px', fontSize: 'clamp(24px, 2.8vw, 40px)' }}>{feature.title}</h2>
-                      <p style={{ fontSize: 17, lineHeight: 1.62, color: 'var(--ink-2)', marginBottom: 24 }}>{feature.excerpt}</p>
-                      <div className="date" style={{ fontSize: 13, color: 'var(--muted)' }}>{feature.date} · {feature.read} read</div>
-                      <div style={{ marginTop: 24 }}>
-                        <span className="btn btn-primary" style={{ display: 'inline-flex' }}>Read story →</span>
+                      <h3>{feature.title}</h3>
+                      <p>{feature.excerpt}</p>
+                      <div className="date">{feature.date} · {feature.read} read</div>
+                      <div style={{ marginTop: 18 }}>
+                        <span className="btn btn-accent" style={{ display: 'inline-flex' }}>Read story →</span>
                       </div>
                     </div>
                   </Link>
