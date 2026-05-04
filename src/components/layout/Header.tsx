@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, ChevronDown, Menu, X } from 'lucide-react'
+import { Search, ChevronDown, Menu, X, Sun, Moon } from 'lucide-react'
 
 interface DropdownItem {
   label: string
@@ -93,6 +93,22 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const triggerRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
+
+  // Dark-mode toggle (R2 §13). Honour stored preference + system default.
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    const stored = localStorage.getItem('cnz-theme')
+    if (stored) return stored === 'dark'
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
+  })
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '')
+  }, [isDark])
+  const toggleTheme = () => {
+    const next = !isDark
+    setIsDark(next)
+    try { localStorage.setItem('cnz-theme', next ? 'dark' : 'light') } catch {}
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30)
@@ -236,6 +252,16 @@ export default function Header() {
               <Search size={14} aria-hidden="true" />
               <span>Search</span>
             </Link>
+            <button
+              className="fb-theme-toggle"
+              onClick={toggleTheme}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-pressed={isDark}
+              title={isDark ? 'Light mode' : 'Dark mode'}
+              type="button"
+            >
+              {isDark ? <Sun size={14} aria-hidden="true" /> : <Moon size={14} aria-hidden="true" />}
+            </button>
             <span className="fb-signin">Sign in</span>
             <Link to="/funding/apply" className="fb-cta">Apply →</Link>
             <button

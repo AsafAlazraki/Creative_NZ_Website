@@ -2580,3 +2580,102 @@ main[id="main-content"]:focus { outline: none; }
 @media (max-width: 1024px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Theme toggle button (R2 §13) ─────────── */
+.fb-theme-toggle {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-2);
+  border-radius: 999px;
+  cursor: pointer;
+  margin: 0 6px;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.fb-theme-toggle:hover,
+.fb-theme-toggle[aria-pressed="true"]:hover {
+  background: var(--kowhai);
+  color: var(--accent-ink);
+  border-color: var(--kowhai);
+}
+@media (max-width: 1024px) {
+  .fb-theme-toggle { display: inline-flex; }  /* keep visible at all widths */
+}
+
+/* ── Email alert sign-up (R2 §14) ─────────── */
+.alert-signup {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px;
+  font-size: 13.5px;
+}
+.alert-signup-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.alert-signup-row {
+  display: flex;
+  gap: 8px;
+}
+.alert-signup-row input[type="email"] {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  background: var(--card);
+  color: var(--ink);
+}
+.alert-signup-row input[type="email"]:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px rgba(26,22,18,0.08);
+}
+.alert-signup-row .btn { padding: 10px 14px; font-size: 13px; }
+.alert-signup-ok {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--bush);
+  line-height: 1.5;
+}
+.alert-signup-ok-tick {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bush);
+  color: #fff;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* ── Font-variation polish (R2 §7) ─────────
+   Apply variation axes to the most-seen typography so the variable
+   axes (loaded via fontsource in main.tsx) actually show up visually.
+*/
+.hero h1 { font-variation-settings: 'wght' 320, 'opsz' 96; }
+.hero h1 .light { font-variation-settings: 'wght' 240, 'opsz' 96; font-weight: 240; }
+.hero h1 .accent { font-variation-settings: 'wght' 420, 'opsz' 72; }
+h2 { font-variation-settings: 'wght' 360, 'opsz' 60; }
+h3 { font-variation-settings: 'wght' 380, 'opsz' 36; }
+
+/* Eyebrow — slightly heavier */
+.eyebrow { font-variation-settings: 'wght' 550; }
+
+/* Pull quote — refined italic */
+.pull-quote { font-variation-settings: 'wght' 280, 'opsz' 36 !important; }

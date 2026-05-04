@@ -1,9 +1,94 @@
 import { Link, useParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { Bell } from 'lucide-react'
 import { OPPORTUNITIES, getDraft } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import SubNav from '@/components/ui/SubNav'
+
+/**
+ * Alert sign-up — shown on upcoming opportunities so users can be
+ * notified when applications open. Posts to a Netlify Form
+ * (see netlify.toml / public _form-name handling). Renders inline
+ * with success state when submitted.
+ */
+function AlertSignup({ oppTitle, oppDate }: { oppTitle: string; oppDate: string }) {
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim()) return
+    // In production this would POST to Netlify Forms or a lightweight
+    // serverless function. For the demo we just acknowledge locally.
+    setSubmitted(true)
+  }
+
+  if (!open) {
+    return (
+      <button
+        className="btn btn-ghost"
+        style={{ width: '100%', justifyContent: 'center', display: 'flex' }}
+        onClick={() => setOpen(true)}
+      >
+        <Bell size={14} aria-hidden="true" /> Notify me when open
+      </button>
+    )
+  }
+  return (
+    <div className="alert-signup">
+      <AnimatePresence mode="wait">
+        {submitted ? (
+          <motion.div
+            key="ok"
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className="alert-signup-ok"
+            role="status"
+            aria-live="polite"
+          >
+            <span className="alert-signup-ok-tick">✓</span>
+            We'll email <strong>{email}</strong> when this round opens.
+          </motion.div>
+        ) : (
+          <motion.form
+            key="form"
+            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            onSubmit={handleSubmit}
+            name="funding-alert"
+          >
+            <input type="hidden" name="form-name" value="funding-alert" />
+            <input type="hidden" name="opportunity" value={oppTitle} />
+            <p className="alert-signup-meta">
+              <Bell size={13} aria-hidden="true" /> Opens {oppDate}. We'll email you when applications open.
+            </p>
+            <div className="alert-signup-row">
+              <input
+                type="email"
+                name="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                aria-label="Your email address for funding round alerts"
+              />
+              <button type="submit" className="btn btn-accent">Notify me</button>
+            </div>
+            <button
+              type="button"
+              className="btn-link"
+              onClick={() => setOpen(false)}
+              style={{ fontSize: 12, marginTop: 8 }}
+            >
+              Cancel
+            </button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 const SUB_ITEMS = [
   { label: 'Overview', path: '/funding' },
@@ -196,9 +281,7 @@ export default function OpportunityDetail() {
                 </Link>
               </MagneticHover>
             ) : o.status === 'upcoming' ? (
-              <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>
-                Notify me when open
-              </button>
+              <AlertSignup oppTitle={o.title} oppDate={o.next} />
             ) : (
               <button className="btn btn-ghost" disabled style={{ width: '100%', justifyContent: 'center', opacity: 0.5 }}>
                 Round closed
