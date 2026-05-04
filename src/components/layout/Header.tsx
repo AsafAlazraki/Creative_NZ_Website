@@ -186,7 +186,7 @@ export default function Header() {
                     {groups && isOpen && (
                       <motion.div
                         id={dropdownId}
-                        className="fb-dropdown"
+                        className={`fb-dropdown${items.length > 6 ? ' fb-dropdown--two-col' : ''}`}
                         role="menu"
                         aria-label={`${n.label} menu`}
                         initial={{ opacity: 0, y: -8, scale: 0.97 }}
@@ -219,23 +219,34 @@ export default function Header() {
                         }}
                       >
                         <div className="fb-dropdown-inner">
-                          {items.map((item, ii) => (
-                            <Link
-                              key={ii}
-                              to={item.path}
-                              className="fb-dd-item"
-                              onClick={() => setOpenDropdown(null)}
-                              role="menuitem"
-                              tabIndex={ii === 0 ? 0 : -1}
-                            >
-                              <span className="fb-dd-icon" aria-hidden="true">{item.icon || '·'}</span>
-                              <span className="fb-dd-text">
-                                <span className="fb-dd-label">{item.label}</span>
-                                {(item.kupu || item.desc) && (
-                                  <span className="fb-dd-desc">{item.kupu || item.desc}</span>
-                                )}
-                              </span>
-                            </Link>
+                          {groups.map((group, gi) => (
+                            <div key={gi} className="fb-dd-group">
+                              {group.heading && (
+                                <div className="fb-dd-heading">{group.heading}</div>
+                              )}
+                              {group.items.map((item, ii) => {
+                                // Roving-tabindex: first overall menuitem is 0, rest -1
+                                const flatIdx = groups.slice(0, gi).reduce((n, g) => n + g.items.length, 0) + ii
+                                return (
+                                  <Link
+                                    key={ii}
+                                    to={item.path}
+                                    className="fb-dd-item"
+                                    onClick={() => setOpenDropdown(null)}
+                                    role="menuitem"
+                                    tabIndex={flatIdx === 0 ? 0 : -1}
+                                  >
+                                    <span className="fb-dd-icon" aria-hidden="true">{item.icon || '·'}</span>
+                                    <span className="fb-dd-text">
+                                      <span className="fb-dd-label">{item.label}</span>
+                                      {(item.kupu || item.desc) && (
+                                        <span className="fb-dd-desc">{item.kupu || item.desc}</span>
+                                      )}
+                                    </span>
+                                  </Link>
+                                )
+                              })}
+                            </div>
                           ))}
                         </div>
                       </motion.div>

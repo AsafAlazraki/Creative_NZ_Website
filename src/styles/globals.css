@@ -2679,3 +2679,51 @@ h3 { font-variation-settings: 'wght' 380, 'opsz' 36; }
 
 /* Pull quote — refined italic */
 .pull-quote { font-variation-settings: 'wght' 280, 'opsz' 36 !important; }
+
+/* ── Dropdown 2-column layout for long menus ─────
+   Triggered by .fb-dropdown--two-col when the parent has > 6 items
+   total. Group headings render as small mono caps; groups break
+   neatly across the two columns.
+*/
+.fb-dropdown--two-col { min-width: 620px; }
+.fb-dropdown--two-col .fb-dropdown-inner {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 4px 12px;
+}
+.fb-dd-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0;
+}
+.fb-dropdown--two-col .fb-dd-group {
+  /* Each group sits in its own grid cell, but if there are only 2 groups
+     and one is much shorter, we let CSS auto-flow handle balance. */
+  break-inside: avoid;
+}
+.fb-dd-heading {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 8px 12px 6px;
+}
+
+/* Mobile: collapse to single column at narrow widths */
+@media (max-width: 700px) {
+  .fb-dropdown--two-col { min-width: min(94vw, 380px); }
+  .fb-dropdown--two-col .fb-dropdown-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cap height when very tall — scroll within rather than off-screen */
+.fb-dropdown {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.fb-dropdown::-webkit-scrollbar { width: 6px; }
+.fb-dropdown::-webkit-scrollbar-thumb { background: rgba(20,16,8,0.18); border-radius: 4px; }

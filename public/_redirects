@@ -1,0 +1,4 @@
+# SPA fallback for client-side React Router routes.
+# Without this, Netlify 404s on direct URL load / page refresh of any sub-route.
+# Status 200 means "rewrite, don't redirect" — URL stays as-is, index.html is served.
+/*  /index.html  200
