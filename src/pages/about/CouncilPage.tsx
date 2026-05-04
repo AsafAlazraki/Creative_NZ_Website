@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { COUNCIL } from '@/data'
 import { KoruCorner, ScrollReveal } from '@/components/motif/KoruMotifs'
+import { PersonPortrait } from '@/components/ui/PersonPortrait'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import SubNav from '@/components/ui/SubNav'
 
@@ -14,27 +15,6 @@ const SUBNAV = [
   { label: 'Careers', path: '/about/careers' },
   { label: 'Contact', path: '/about/contact' },
 ]
-
-// Colour palette for photo placeholders — cycles through brand colours
-const PLACEHOLDER_COLORS = [
-  { bg: 'var(--moana)', text: 'rgba(255,255,255,0.82)' },
-  { bg: 'var(--pohutukawa)', text: 'rgba(255,255,255,0.82)' },
-  { bg: 'var(--bush)', text: 'rgba(255,255,255,0.82)' },
-  { bg: 'var(--kowhai)', text: 'rgba(20,16,8,0.65)' },
-  { bg: 'var(--siapo)', text: 'rgba(255,255,255,0.82)' },
-  { bg: 'var(--moana)', text: 'rgba(255,255,255,0.82)' },
-  { bg: 'var(--pohutukawa)', text: 'rgba(255,255,255,0.82)' },
-  { bg: 'var(--bush)', text: 'rgba(255,255,255,0.82)' },
-]
-
-function initials(name: string) {
-  return name
-    .split(' ')
-    .filter(p => !p.startsWith('(') && !['Sir', 'Dr', 'Hon'].includes(p))
-    .slice(0, 2)
-    .map(p => p[0])
-    .join('')
-}
 
 const BOARDS = [
   {
@@ -136,8 +116,6 @@ export default function CouncilPage() {
 
           <div className="people-grid">
             {COUNCIL.map((member, i) => {
-              const palette = PLACEHOLDER_COLORS[i % PLACEHOLDER_COLORS.length]
-              const inits = initials(member.name)
               return (
                 <motion.div
                   key={member.name}
@@ -147,12 +125,12 @@ export default function CouncilPage() {
                   viewport={{ once: true, margin: '-24px' }}
                   transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: i * 0.07 }}
                 >
-                  <div
-                    className="photo"
-                    style={{ background: palette.bg, color: palette.text }}
-                  >
-                    {inits}
-                  </div>
+                  <PersonPortrait
+                    name={member.name}
+                    index={i}
+                    aspectRatio="4/5"
+                    accent={member.iwi ? 'IWI' : 'COUNCIL'}
+                  />
                   <div>
                     <h4>{member.name}</h4>
                     <div className="role">{member.role}</div>

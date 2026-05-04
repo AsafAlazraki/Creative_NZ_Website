@@ -38,24 +38,26 @@ function StatCard({ value, label, kupu, delay = 0 }: StatCardProps) {
   )
 }
 
+import { Landmark, Globe2, GraduationCap, Users } from 'lucide-react'
+
 const ADVOCACY_AREAS = [
   {
-    icon: '🎭',
+    Icon: Landmark,
     title: 'Arts funding policy',
     body: 'We advocate for sustained, evidence-based public investment in the arts — at central and local government level. The arts generate economic returns, support wellbeing and build social cohesion.',
   },
   {
-    icon: '🌏',
+    Icon: Globe2,
     title: 'International presence',
     body: 'New Zealand artists bring our stories and our voice to the world. We advocate for government support for international touring, residencies and export of New Zealand creative work.',
   },
   {
-    icon: '🏫',
+    Icon: GraduationCap,
     title: 'Arts in education',
     body: 'Quality arts education builds creative, resilient, empathetic citizens. We advocate for arts subjects to receive equitable time and resource in the curriculum from early childhood through to tertiary education.',
   },
   {
-    icon: '🏘️',
+    Icon: Users,
     title: 'Community access',
     body: 'The arts should be available to everyone — regardless of location, income or background. We advocate for investment in community arts and for reduced barriers to participation.',
   },
@@ -214,7 +216,14 @@ export default function AdvocacyPage() {
                 viewport={{ once: true, margin: '-30px' }}
                 transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: i * 0.09 }}
               >
-                <div style={{ fontSize: 28, marginBottom: 16 }}>{area.icon}</div>
+                <div style={{
+                  width: 48, height: 48, borderRadius: 'var(--r-md)',
+                  background: 'rgba(232,163,23,0.12)', color: 'var(--kowhai-deep)',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: 18,
+                }}>
+                  <area.Icon size={22} strokeWidth={1.6} aria-hidden="true" />
+                </div>
                 <h3 style={{ fontSize: 22, marginBottom: 12 }}>{area.title}</h3>
                 <p style={{ fontSize: 15, lineHeight: 1.7, color: 'var(--ink-2)' }}>{area.body}</p>
               </motion.div>

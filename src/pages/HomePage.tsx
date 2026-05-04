@@ -132,7 +132,7 @@ export default function HomePage() {
 
               {/* Search */}
               <motion.div
-                style={{ marginTop: 48 }}
+                style={{ marginTop: 48, position: 'relative' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.36 }}
@@ -260,6 +260,24 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+
+          {/* Source citation */}
+          <ScrollReveal delay={0.15}>
+            <p style={{
+              marginTop: 48,
+              fontSize: 11.5,
+              color: 'rgba(255,255,255,0.45)',
+              letterSpacing: '0.06em',
+              maxWidth: 760,
+              lineHeight: 1.6,
+              fontStyle: 'italic',
+              fontFamily: 'var(--font-display)',
+            }}>
+              Source: New Zealanders &amp; the Arts 2026 (Creative NZ). Investment figure
+              from CNZ Annual Report 2024–25. GDP &amp; employment data: Stats NZ
+              Cultural and Creative Industries Satellite Account 2025.
+            </p>
+          </ScrollReveal>
         </div>
       </section>
 

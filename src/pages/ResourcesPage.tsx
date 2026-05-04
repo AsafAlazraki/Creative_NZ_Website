@@ -4,12 +4,13 @@ import { motion } from 'framer-motion'
 import { TOOLKITS, REPORTS } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
+import { Users, ShieldCheck, HandHeart, Coins, FileText } from 'lucide-react'
 
-const TOOLKIT_ICONS: Record<string, string> = {
-  community: '🏘️',
-  risk: '🛡️',
-  volunteer: '🤝',
-  donations: '💛',
+const TOOLKIT_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number }>> = {
+  community: Users,
+  risk: ShieldCheck,
+  volunteer: HandHeart,
+  donations: Coins,
 }
 
 export default function ResourcesPage() {
@@ -101,14 +102,17 @@ export default function ResourcesPage() {
                         width: 52,
                         height: 52,
                         borderRadius: 'var(--r-md)',
-                        background: 'var(--paper-2)',
+                        background: 'rgba(232,163,23,0.12)',
+                        color: 'var(--kowhai-deep)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: 22,
                         flexShrink: 0,
                       }}>
-                        {TOOLKIT_ICONS[toolkit.id] ?? '📋'}
+                        {(() => {
+                          const Icon = TOOLKIT_ICONS[toolkit.id] ?? FileText
+                          return <Icon size={22} strokeWidth={1.6} />
+                        })()}
                       </div>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>

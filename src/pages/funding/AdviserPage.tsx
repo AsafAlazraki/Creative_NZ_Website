@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
+import { PersonPortrait } from '@/components/ui/PersonPortrait'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import SubNav from '@/components/ui/SubNav'
 
@@ -112,27 +113,26 @@ export default function AdviserPage() {
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
                   className="card"
-                  style={{ height: '100%' }}
+                  style={{ height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
                 >
-                  <div style={{
-                    height: 80, background: a.bg,
-                    borderRadius: 'var(--r) var(--r) 0 0',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <span style={{ color: '#fff', fontSize: 28, fontFamily: 'var(--font-display)', fontStyle: 'italic', opacity: 0.9 }}>
-                      {a.name.split(' ').map(s => s[0]).join('')}
-                    </span>
-                  </div>
-                  <div className="card-body">
+                  <PersonPortrait
+                    name={a.name}
+                    index={i}
+                    aspectRatio="4/3"
+                    accent="ADVISER"
+                  />
+                  <div className="card-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <h3 style={{ fontSize: 20, marginBottom: 6 }}>{a.name}</h3>
                     <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 12px' }}>{a.region}</p>
                     <p style={{ fontSize: 14, color: 'var(--ink-2)', margin: '0 0 10px' }}>
                       <strong>Specialty:</strong> {a.specialty}
                     </p>
                     <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 20px' }}>Available {a.avail}</p>
-                    <MagneticHover strength={0.15}>
-                      <button className="btn btn-ghost">Book a kōrero →</button>
-                    </MagneticHover>
+                    <div style={{ marginTop: 'auto' }}>
+                      <MagneticHover strength={0.15}>
+                        <button className="btn btn-ghost">Book a kōrero →</button>
+                      </MagneticHover>
+                    </div>
                   </div>
                 </motion.div>
               </motion.div>

@@ -43,6 +43,14 @@ export default function ApplyFlow() {
     startDate: '', endDate: '', reach: '', artforms: [],
   })
 
+  // Eligibility checkboxes (step 0) and final confirmation (step 4) gate progress
+  const [eligible, setEligible] = useState<boolean[]>(() => CHECKLIST.map(() => false))
+  const [confirmed, setConfirmed] = useState(false)
+  const allEligible = eligible.every(Boolean)
+
+  const canContinue = step === 0 ? allEligible : true
+  const canSubmit = confirmed
+
   const upd = (k: keyof FormState, v: string | string[]) =>
     setForm(f => ({ ...f, [k]: v }))
 
@@ -127,15 +135,25 @@ export default function ApplyFlow() {
             >
               {step === 0 && (
                 <div>
-                  <h3 style={{ marginBottom: 24 }}>Let's check this fund is right for you.</h3>
+                  <h3 style={{ marginBottom: 12 }}>Let's check this fund is right for you.</h3>
+                  <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 24 }}>
+                    Tick all four to continue.
+                  </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 680 }}>
                     {CHECKLIST.map((q, i) => (
                       <label key={i} style={{
                         display: 'flex', gap: 14, padding: 18,
-                        border: '1px solid var(--line)', borderRadius: 'var(--r)',
+                        border: `1px solid ${eligible[i] ? 'var(--bush)' : 'var(--line)'}`,
+                        background: eligible[i] ? 'rgba(63,94,58,0.04)' : 'transparent',
+                        borderRadius: 'var(--r)',
                         cursor: 'pointer', alignItems: 'center',
+                        transition: 'border-color 0.18s, background 0.18s',
                       }}>
-                        <input type="checkbox" defaultChecked={i < 2} />
+                        <input
+                          type="checkbox"
+                          checked={eligible[i]}
+                          onChange={e => setEligible(prev => prev.map((v, idx) => idx === i ? e.target.checked : v))}
+                        />
                         <span>{q}</span>
                       </label>
                     ))}
@@ -287,7 +305,12 @@ export default function ApplyFlow() {
                   </div>
                   <div style={{ marginTop: 32, padding: 24, background: 'var(--surface)', borderRadius: 'var(--r)' }}>
                     <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer' }}>
-                      <input type="checkbox" style={{ marginTop: 4 }} />
+                      <input
+                        type="checkbox"
+                        style={{ marginTop: 4 }}
+                        checked={confirmed}
+                        onChange={e => setConfirmed(e.target.checked)}
+                      />
                       <span style={{ fontSize: 14 }}>
                         I confirm the information in this application is accurate, and I have read CNZ's funding terms and privacy policy.
                       </span>
@@ -306,8 +329,28 @@ export default function ApplyFlow() {
             <div style={{ display: 'flex', gap: 12 }}>
               <button className="btn btn-ghost" onClick={handleSaveDraft}>Save draft</button>
               {step < STEPS.length - 1
-                ? <button className="btn btn-primary" onClick={() => setStep(s => s + 1)}>Continue →</button>
-                : <button className="btn btn-accent" onClick={handleSubmit}>Submit application →</button>
+                ? (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => canContinue && setStep(s => s + 1)}
+                    disabled={!canContinue}
+                    style={!canContinue ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+                    title={!canContinue ? 'Please confirm all eligibility criteria first' : undefined}
+                  >
+                    Continue →
+                  </button>
+                )
+                : (
+                  <button
+                    className="btn btn-accent"
+                    onClick={() => canSubmit && handleSubmit()}
+                    disabled={!canSubmit}
+                    style={!canSubmit ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
+                    title={!canSubmit ? 'Please confirm before submitting' : undefined}
+                  >
+                    Submit application →
+                  </button>
+                )
               }
             </div>
           </div>

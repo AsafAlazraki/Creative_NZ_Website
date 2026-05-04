@@ -130,8 +130,11 @@ export default function FundingResults() {
             </table>
           </ScrollReveal>
 
-          <div style={{ marginTop: 36, textAlign: 'center' }}>
-            <button className="btn btn-ghost">Load more results</button>
+          <div style={{ marginTop: 36, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
+            Showing the most recent {RESULTS.length} results from the published rounds.{' '}
+            <Link to="/funding/opportunities" className="btn-link" style={{ marginLeft: 8 }}>
+              See current opportunities →
+            </Link>
           </div>
         </div>
       </section>

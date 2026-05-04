@@ -203,9 +203,42 @@ export default function NewsArticle() {
                 <div>
                   <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 10, fontWeight: 500 }}>Share this story</div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    {['Twitter / X', 'LinkedIn', 'Facebook'].map(net => (
-                      <button key={net} className="pill" style={{ fontSize: 12 }}>{net}</button>
-                    ))}
+                    {(() => {
+                      const url = typeof window !== 'undefined' ? window.location.href : ''
+                      const text = `${story.title} — Creative New Zealand`
+                      const e = encodeURIComponent
+                      const SHARES = [
+                        { label: 'Twitter / X', href: `https://twitter.com/intent/tweet?url=${e(url)}&text=${e(text)}` },
+                        { label: 'LinkedIn',    href: `https://www.linkedin.com/sharing/share-offsite/?url=${e(url)}` },
+                        { label: 'Facebook',    href: `https://www.facebook.com/sharer/sharer.php?u=${e(url)}` },
+                        { label: 'Copy link',   href: '' },
+                      ]
+                      return SHARES.map(s => s.label === 'Copy link' ? (
+                        <button
+                          key={s.label}
+                          className="pill"
+                          style={{ fontSize: 12 }}
+                          onClick={() => {
+                            if (typeof navigator !== 'undefined' && navigator.clipboard) {
+                              navigator.clipboard.writeText(url)
+                            }
+                          }}
+                        >
+                          {s.label}
+                        </button>
+                      ) : (
+                        <a
+                          key={s.label}
+                          className="pill"
+                          style={{ fontSize: 12, textDecoration: 'none' }}
+                          href={s.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          {s.label}
+                        </a>
+                      ))
+                    })()}
                   </div>
                 </div>
                 <MagneticHover strength={0.2}>
