@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { FUNDING_TIERS, OPPORTUNITIES, STATS, STORIES, IMAGES } from '@/data'
+import { FUNDING_TIERS, OPPORTUNITIES, STATS, STORIES, IMAGES, isClosingSoon } from '@/data'
 import { KoruCorner, KoruBand, KoruSpiral, MagneticHover, ScrollReveal, AnimatedKoru, ParallaxImage } from '@/components/motif/KoruMotifs'
 import { ShaderBackground } from '@/components/effects/ShaderBackground'
 import { NoiseGrain } from '@/components/effects/NoiseGrain'
@@ -184,7 +184,7 @@ export default function HomePage() {
                 <motion.div style={{ y: heroY, height: '115%', marginTop: '-7.5%' }}>
                   <img src={IMAGES.performance} alt="A performer on stage" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </motion.div>
-                <span className="credit">Photo placeholder · NZ Festival 2025</span>
+                <span className="credit">Photo: Unsplash · Demo asset</span>
               </div>
             </motion.div>
           </div>
@@ -305,7 +305,13 @@ export default function HomePage() {
                 <Link to={`/funding/opportunity/${o.id}`} className="opp-row">
                   <div className="code">{o.code}</div>
                   <div className="title-cell">
-                    <h4><span className="title-text">{o.title}</span><span className={`status-badge ${o.status}`}>{o.status}</span></h4>
+                    <h4>
+                      <span className="title-text">{o.title}</span>
+                      <span className="badge-stack">
+                        {isClosingSoon(o.next) && <span className="closing-soon-badge">Closing soon</span>}
+                        <span className={`status-badge ${o.status}`}>{o.status}</span>
+                      </span>
+                    </h4>
                     {o.kupu && <span className="kupu">{o.kupu}</span>}
                   </div>
                   <div className="desc">{o.desc}</div>
@@ -378,8 +384,33 @@ export default function HomePage() {
               <Link to="/news" className="btn-link">All news →</Link>
             </div>
           </ScrollReveal>
-          <div className="news-grid">
-            {STORIES.slice(0, 4).map((s, i) => (
+          {/* Featured lede — magazine-style first story */}
+          {STORIES[0] && (() => {
+            const f = STORIES[0]
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                style={{ marginBottom: 56 }}
+              >
+                <Link to={`/news/${f.id}`} className="ncard ncard--feature">
+                  <div className="ncard-img"><img src={f.img} alt="" /></div>
+                  <div className="ncard--feature-body">
+                    <div className="cat">{f.cat}{f.kupu ? ` · ${f.kupu}` : ''}</div>
+                    <h3>{f.title}</h3>
+                    <p className="excerpt">{f.excerpt}</p>
+                    <div className="date">{f.date} · {f.read} read</div>
+                    <span className="btn-link" style={{ marginTop: 8 }}>Read full story →</span>
+                  </div>
+                </Link>
+              </motion.div>
+            )
+          })()}
+
+          <div className="news-grid news-grid--3">
+            {STORIES.slice(1, 4).map((s, i) => (
               <motion.div
                 key={s.id}
                 initial={{ opacity: 0, y: 28 }}

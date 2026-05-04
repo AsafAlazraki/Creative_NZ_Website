@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useMemo } from 'react'
-import { OPPORTUNITIES, loadDrafts } from '@/data'
+import { OPPORTUNITIES, loadDrafts, isClosingSoon } from '@/data'
 import { ScrollReveal } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import SubNav from '@/components/ui/SubNav'
@@ -207,7 +207,10 @@ export default function Opportunities() {
                                 </span>
                               )}
                             </span>
-                            <span className={`status-badge ${o.status}`}>{o.status}</span>
+                            <span className="badge-stack">
+                              {isClosingSoon(o.next) && <span className="closing-soon-badge">Closing soon</span>}
+                              <span className={`status-badge ${o.status}`}>{o.status}</span>
+                            </span>
                           </h4>
                           {o.kupu && <span className="kupu">{o.kupu}</span>}
                         </div>

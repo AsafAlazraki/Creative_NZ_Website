@@ -1,10 +1,23 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { OPPORTUNITIES, FILTERS, getDraft, saveDraft, deleteDraft } from '@/data'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
-const STEPS = ['Eligibility', 'About you', 'Your project', 'Budget', 'Review']
+// Stepper step descriptive labels
+const STEPS: { name: string; sub: string }[] = [
+  { name: 'Eligibility',  sub: 'Are you eligible?' },
+  { name: 'About you',    sub: 'Your details & practice' },
+  { name: 'Your project', sub: 'What you want to do' },
+  { name: 'Budget',       sub: 'How much it will cost' },
+  { name: 'Review',       sub: 'Check & submit' },
+]
+const STEP_NAMES = STEPS.map(s => s.name)
+const PROJECT_DESC_LIMIT = 25      // words for one-line summary
+const PROJECT_STORY_LIMIT = 500    // words for project body
+function countWords(s: string) {
+  return s.trim() ? s.trim().split(/\s+/).length : 0
+}
 
 const CHECKLIST = [
   'I am applying as an individual, group or organisation based in Aotearoa NZ',
@@ -30,6 +43,24 @@ interface FormState {
   artforms: string[]
 }
 
+// Live word counter shown beneath text inputs/textareas.
+function WordCounter({ value, limit, hint }: { value: string; limit: number; hint?: string }) {
+  const count = countWords(value)
+  const ratio = count / limit
+  const color =
+    count > limit ? 'var(--pohutukawa)' :
+    ratio > 0.8 ? 'var(--kowhai-deep)' :
+    'var(--muted)'
+  return (
+    <div className="hint" style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginTop: 6 }}>
+      <span>{hint}</span>
+      <span style={{ color, fontFeatureSettings: '"tnum"' }} aria-live="polite">
+        {count} / {limit} words
+      </span>
+    </div>
+  )
+}
+
 export default function ApplyFlow() {
   const [searchParams] = useSearchParams()
   const oppId = searchParams.get('opp') ?? 'general'
@@ -48,8 +79,25 @@ export default function ApplyFlow() {
   const [confirmed, setConfirmed] = useState(false)
   const allEligible = eligible.every(Boolean)
 
-  const canContinue = step === 0 ? allEligible : true
-  const canSubmit = confirmed
+  // Step 2 (Your project) requires the textarea word counts to be within limits
+  const projectStoryWords = countWords(form.projectStory)
+  const projectDescWords = countWords(form.projectDesc)
+  const overStoryLimit = projectStoryWords > PROJECT_STORY_LIMIT
+  const overDescLimit  = projectDescWords > PROJECT_DESC_LIMIT
+  const overLimits = overStoryLimit || overDescLimit
+
+  const canContinue =
+    step === 0 ? allEligible :
+    step === 2 ? !overLimits :
+    true
+  const canSubmit = confirmed && !overLimits
+
+  const continueBlockedReason =
+    step === 0 ? 'Tick all four eligibility statements to continue.' :
+    step === 2 && overLimits ? 'Reduce overlong fields below their word limit.' :
+    undefined
+
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null)
 
   const upd = (k: keyof FormState, v: string | string[]) =>
     setForm(f => ({ ...f, [k]: v }))
@@ -63,13 +111,25 @@ export default function ApplyFlow() {
     }))
   }
 
+  // Autosave: debounce 1s after any field change, then persist as draft
+  const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => {
+    if (autosaveTimer.current) clearTimeout(autosaveTimer.current)
+    autosaveTimer.current = setTimeout(() => {
+      saveDraft(oppId, { step, form, oppTitle: opp?.title ?? 'Application' })
+      setLastSavedAt(new Date())
+    }, 1000)
+    return () => { if (autosaveTimer.current) clearTimeout(autosaveTimer.current) }
+  }, [form, step, oppId, opp?.title])
+
+  const [toast, setToast] = useState('')
+
   const handleSaveDraft = () => {
     saveDraft(oppId, { step, form, oppTitle: opp?.title ?? 'Application' })
+    setLastSavedAt(new Date())
     setToast('Your application has been saved as a draft.')
     setTimeout(() => setToast(''), 4000)
   }
-
-  const [toast, setToast] = useState('')
 
   const handleSubmit = () => {
     deleteDraft(oppId)
@@ -110,19 +170,21 @@ export default function ApplyFlow() {
           </motion.div>
 
           {/* Stepper */}
-          <div className="stepper">
+          <ol className="stepper" aria-label="Application steps">
             {STEPS.map((s, i) => (
-              <button
-                key={i}
-                className={`step${i === step ? ' active' : i < step ? ' done' : ''}`}
-                onClick={() => setStep(i)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
-              >
-                <span className="num">Step {i + 1}</span>
-                {s}
-              </button>
+              <li key={i} style={{ listStyle: 'none' }}>
+                <button
+                  className={`step${i === step ? ' active' : i < step ? ' done' : ''}`}
+                  onClick={() => setStep(i)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', width: '100%' }}
+                  aria-current={i === step ? 'step' : undefined}
+                >
+                  <span className="num">{String(i + 1).padStart(2, '0')} / {s.name}</span>
+                  <span className="step-sub">{s.sub}</span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ol>
 
           {/* Step panels */}
           <AnimatePresence mode="wait">
@@ -216,17 +278,24 @@ export default function ApplyFlow() {
                     <input value={form.projectTitle} onChange={e => upd('projectTitle', e.target.value)} />
                   </div>
                   <div className="field full">
-                    <label>One-sentence description</label>
+                    <label htmlFor="apply-project-desc">One-sentence description</label>
                     <input
+                      id="apply-project-desc"
                       placeholder="Describe your project in one sentence"
                       value={form.projectDesc}
                       onChange={e => upd('projectDesc', e.target.value)}
                     />
-                    <div className="hint">This appears on the public list of funded projects if successful.</div>
+                    <WordCounter value={form.projectDesc} limit={PROJECT_DESC_LIMIT} hint="This appears on the public list of funded projects if successful." />
                   </div>
                   <div className="field full">
-                    <label>Tell us about your project (max 500 words)</label>
-                    <textarea rows={8} value={form.projectStory} onChange={e => upd('projectStory', e.target.value)} />
+                    <label htmlFor="apply-project-story">Tell us about your project</label>
+                    <textarea
+                      id="apply-project-story"
+                      rows={8}
+                      value={form.projectStory}
+                      onChange={e => upd('projectStory', e.target.value)}
+                    />
+                    <WordCounter value={form.projectStory} limit={PROJECT_STORY_LIMIT} hint="Up to 500 words. Tell us what, who and why." />
                   </div>
                   <div className="field">
                     <label>Start date</label>
@@ -296,8 +365,8 @@ export default function ApplyFlow() {
                         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       }}>
                         <div>
-                          <div style={{ fontFamily: 'var(--font-display)', fontSize: 18 }}>{s}</div>
-                          <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 2 }}>Complete</div>
+                          <div style={{ fontFamily: 'var(--font-display)', fontSize: 18 }}>{s.name}</div>
+                          <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 2 }}>{s.sub}</div>
                         </div>
                         <button className="btn-link" onClick={() => setStep(i)}>Edit →</button>
                       </div>
@@ -326,7 +395,12 @@ export default function ApplyFlow() {
             <button className="btn btn-ghost" disabled={step === 0} onClick={() => setStep(s => Math.max(0, s - 1))}>
               ← Back
             </button>
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+              {lastSavedAt && (
+                <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }} aria-live="polite">
+                  Saved {lastSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              )}
               <button className="btn btn-ghost" onClick={handleSaveDraft}>Save draft</button>
               {step < STEPS.length - 1
                 ? (
@@ -335,7 +409,7 @@ export default function ApplyFlow() {
                     onClick={() => canContinue && setStep(s => s + 1)}
                     disabled={!canContinue}
                     style={!canContinue ? { opacity: 0.4, cursor: 'not-allowed' } : undefined}
-                    title={!canContinue ? 'Please confirm all eligibility criteria first' : undefined}
+                    title={continueBlockedReason}
                   >
                     Continue →
                   </button>

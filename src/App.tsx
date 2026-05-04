@@ -5,6 +5,7 @@ import Lenis from 'lenis'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { PageTransition } from '@/components/motif/KoruMotifs'
+import { SkeletonHero } from '@/components/ui/Skeleton'
 
 // Pages — lazy loaded for performance
 import { lazy, Suspense } from 'react'
@@ -71,7 +72,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <PageTransition routeKey={location.pathname}>
-        <Suspense fallback={<PageLoader />}>
+        <Suspense fallback={<SkeletonHero />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<HomePage />} />
 
@@ -137,9 +138,11 @@ function AppContent() {
 
   return (
     <>
+      {/* Skip-nav link: hidden until focused, jumps over header to main content */}
+      <a href="#main-content" className="skip-nav">Skip to main content</a>
       <ScrollToTop />
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <AnimatedRoutes />
       </main>
       <Footer />

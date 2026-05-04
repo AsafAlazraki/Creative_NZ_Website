@@ -219,3 +219,23 @@ export function deleteDraft(oppId: string) {
   delete all[oppId];
   localStorage.setItem(DRAFTS_KEY, JSON.stringify(all));
 }
+
+/**
+ * Whether an opportunity's deadline is within the next 7 days.
+ * Parses date strings like "28 May 2026" / "14 May 2026" against today.
+ * Returns false for non-date deadlines (e.g. "Open year-round").
+ */
+export function isClosingSoon(next: string, now: Date = new Date()): boolean {
+  const m = next.trim().match(/^(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{4})$/i);
+  if (!m) return false;
+  const months: Record<string, number> = {
+    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+    jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+  };
+  const day = parseInt(m[1], 10);
+  const monthIdx = months[m[2].slice(0, 3).toLowerCase()];
+  const year = parseInt(m[3], 10);
+  const deadline = new Date(year, monthIdx, day);
+  const diffDays = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+  return diffDays >= 0 && diffDays <= 7;
+}

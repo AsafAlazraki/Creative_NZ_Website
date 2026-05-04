@@ -92,6 +92,7 @@ export default function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const triggerRefs = useRef<Record<string, HTMLAnchorElement | null>>({})
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30)
@@ -104,6 +105,23 @@ export default function Header() {
     setMobileOpen(false)
     setOpenDropdown(null)
   }, [location.pathname])
+
+  // Escape closes any open dropdown and returns focus to its trigger
+  useEffect(() => {
+    if (!openDropdown && !mobileOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (openDropdown) {
+          const trigger = triggerRefs.current[openDropdown]
+          setOpenDropdown(null)
+          trigger?.focus()
+        }
+        if (mobileOpen) setMobileOpen(false)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [openDropdown, mobileOpen])
 
   const handleEnter = (id: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -129,13 +147,18 @@ export default function Header() {
               const groups = DROPDOWNS[n.id]
               const isOpen = openDropdown === n.id
 
+              const dropdownId = `fb-dd-${n.id}`
+              const items = groups ? groups.flatMap(g => g.items) : []
+
               return (
                 <div key={n.id} className="fb-item" onMouseEnter={() => handleEnter(n.id)} onMouseLeave={handleLeave}>
                   <Link
                     to={n.path}
+                    ref={el => { triggerRefs.current[n.id] = el }}
                     className={`fb-link ${active ? 'active' : ''} ${isOpen ? 'open' : ''}`}
                     aria-haspopup={groups ? 'menu' : undefined}
                     aria-expanded={groups ? isOpen : undefined}
+                    aria-controls={groups ? dropdownId : undefined}
                   >
                     {n.label}
                     {groups && (
@@ -146,23 +169,48 @@ export default function Header() {
                   <AnimatePresence>
                     {groups && isOpen && (
                       <motion.div
+                        id={dropdownId}
                         className="fb-dropdown"
                         role="menu"
+                        aria-label={`${n.label} menu`}
                         initial={{ opacity: 0, y: -8, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -6, scale: 0.97 }}
                         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         onMouseEnter={() => handleEnter(n.id)}
                         onMouseLeave={handleLeave}
+                        onKeyDown={(e) => {
+                          // Roving tab-index between menu items
+                          const focusable = Array.from(
+                            (e.currentTarget as HTMLDivElement).querySelectorAll<HTMLAnchorElement>('[role="menuitem"]')
+                          )
+                          const currentIdx = focusable.indexOf(document.activeElement as HTMLAnchorElement)
+                          if (e.key === 'ArrowDown') {
+                            e.preventDefault()
+                            const next = focusable[(currentIdx + 1) % focusable.length]
+                            next?.focus()
+                          } else if (e.key === 'ArrowUp') {
+                            e.preventDefault()
+                            const prev = focusable[(currentIdx - 1 + focusable.length) % focusable.length]
+                            prev?.focus()
+                          } else if (e.key === 'Home') {
+                            e.preventDefault()
+                            focusable[0]?.focus()
+                          } else if (e.key === 'End') {
+                            e.preventDefault()
+                            focusable[focusable.length - 1]?.focus()
+                          }
+                        }}
                       >
                         <div className="fb-dropdown-inner">
-                          {groups.flatMap(g => g.items).map((item, ii) => (
+                          {items.map((item, ii) => (
                             <Link
                               key={ii}
                               to={item.path}
                               className="fb-dd-item"
                               onClick={() => setOpenDropdown(null)}
                               role="menuitem"
+                              tabIndex={ii === 0 ? 0 : -1}
                             >
                               <span className="fb-dd-icon" aria-hidden="true">{item.icon || '·'}</span>
                               <span className="fb-dd-text">
