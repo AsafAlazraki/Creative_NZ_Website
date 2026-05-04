@@ -84,6 +84,9 @@ export default function HomePage() {
           <KoruCorner position="tr" size={400} color="var(--kowhai)" opacity={0.08} />
         </div>
 
+        {/* Oversized italic "Toi" watermark behind the headline (§01) */}
+        <span aria-hidden="true" className="hero-watermark">Toi</span>
+
         <div className="container" style={{ position: 'relative', zIndex: 3 }}>
           <div className="hero-grid">
             {/* Left: text */}
@@ -102,9 +105,9 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
               >
-                The arts{' '}
+                <span className="light">The arts </span>
                 <KineticType words={HERO_VERBS} variant="inline" interval={2800} />
-                {' '}to the spirit, the spirit gives life to the people.
+                <span className="light"> to the spirit, the spirit gives life to the people.</span>
               </motion.h1>
 
               <motion.p
@@ -117,7 +120,7 @@ export default function HomePage() {
               </motion.p>
 
               <motion.div
-                style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 32 }}
+                style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', marginTop: 36 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
@@ -125,52 +128,7 @@ export default function HomePage() {
                 <MagneticHover strength={0.25}>
                   <Link to="/funding" className="btn btn-primary">Find funding →</Link>
                 </MagneticHover>
-                <MagneticHover strength={0.25}>
-                  <Link to="/about/what-we-do" className="btn btn-ghost">What we do</Link>
-                </MagneticHover>
-              </motion.div>
-
-              {/* Search */}
-              <motion.div
-                style={{ marginTop: 48, position: 'relative' }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.36 }}
-              >
-                <span className="eyebrow" style={{ marginBottom: 14, display: 'block' }}>Quick search</span>
-                <div className="searchbar">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ color: 'var(--muted)', flexShrink: 0 }}>
-                    <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M12 12 L16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                  <input
-                    value={q}
-                    onChange={e => setQ(e.target.value)}
-                    placeholder="Try: 'early career', 'Pasifika', 'residency'…"
-                  />
-                  {q && <button className="pill" style={{ fontSize: 11 }} onClick={() => setQ('')}>clear</button>}
-                </div>
-                <AnimatePresence>
-                  {results.length > 0 && (
-                    <motion.div
-                      className="search-results"
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {results.map(r => (
-                        <Link key={r.id} to={`/funding/opportunity/${r.id}`} className="row" onClick={() => setQ('')}>
-                          <div>
-                            <div className="label">{r.title}</div>
-                            <div className="meta">{r.amount} · next: {r.next}</div>
-                          </div>
-                          <div className="meta">→</div>
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <Link to="/about" className="btn-link">Learn how we work →</Link>
               </motion.div>
             </div>
 
@@ -293,8 +251,36 @@ export default function HomePage() {
               <Link to="/funding/opportunities" className="btn-link">View all →</Link>
             </div>
           </ScrollReveal>
-          <div className="opp-list" style={{ borderTop: '1px solid var(--line)' }}>
-            {featuredOpps.map((o, i) => (
+
+          {/* Featured opportunity — horizontal kowhai card (§03) */}
+          {featuredOpps[0] && (() => {
+            const f = featuredOpps[0]
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Link to={`/funding/opportunity/${f.id}`} className="featured-opp">
+                  <div className="featured-opp-text">
+                    <span className="featured-opp-eyebrow">Featured opportunity</span>
+                    <h3>{f.title}</h3>
+                    {f.kupu && <span className="kupu">{f.kupu}</span>}
+                    <p className="desc">{f.desc}</p>
+                  </div>
+                  <div className="featured-opp-meta">
+                    <div className="amt">{f.amount}</div>
+                    <div className="when"><span className="lbl">Closes</span>{f.next}</div>
+                    <span className="btn btn-primary featured-opp-cta">Apply now →</span>
+                  </div>
+                </Link>
+              </motion.div>
+            )
+          })()}
+
+          <div className="opp-list" style={{ borderTop: '1px solid var(--line)', marginTop: 32 }}>
+            {featuredOpps.slice(1).map((o, i) => (
               <motion.div
                 key={o.id}
                 initial={{ opacity: 0, x: -20 }}

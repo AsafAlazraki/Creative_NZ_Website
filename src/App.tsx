@@ -50,12 +50,62 @@ function PageLoader() {
 
 function NotFound() {
   return (
-    <div className="container section" style={{ textAlign: 'center', padding: '120px 0' }}>
-      <span className="eyebrow">404</span>
-      <h1 style={{ marginTop: 16 }}>Page not found.</h1>
-      <p className="lede" style={{ maxWidth: 480, margin: '24px auto' }}>The page you're looking for has moved or doesn't exist.</p>
-      <a href="/" className="btn btn-primary" style={{ display: 'inline-flex', marginTop: 24 }}>Back to home →</a>
-    </div>
+    <section
+      className="container section"
+      style={{
+        textAlign: 'center',
+        padding: '120px 24px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Big drifting koru watermark */}
+      <svg
+        viewBox="0 0 120 120"
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'clamp(360px, 60vw, 720px)',
+          height: 'clamp(360px, 60vw, 720px)',
+          opacity: 0.06,
+          color: 'var(--kowhai)',
+          animation: 'cnzKoruDrift 28s linear infinite',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      >
+        <path
+          d="M 60 100 C 60 100 24 92 24 58 C 24 32 42 20 60 20 C 78 20 90 32 90 50 C 90 68 78 76 66 76 C 54 76 46 68 46 60 C 46 52 54 48 58 48 C 62 48 66 52 66 56"
+          fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+        />
+        <circle cx="66" cy="56" r="3.5" fill="currentColor" />
+      </svg>
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <span className="eyebrow" style={{ color: 'var(--kowhai-deep)' }}>Aue · 404</span>
+        <h1 style={{
+          marginTop: 18,
+          marginBottom: 18,
+          fontVariationSettings: "'wght' 250, 'opsz' 96",
+          fontStyle: 'italic',
+        }}>
+          The stars haven't aligned.
+        </h1>
+        <p className="lede" style={{ maxWidth: 520, margin: '0 auto 36px' }}>
+          We can't find that page. It may have moved, or the link might be a little off-course.
+          Try one of the pathways below.
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href="/" className="btn btn-primary">Back to home</a>
+          <a href="/funding/opportunities" className="btn btn-ghost">Find funding</a>
+          <a href="/news" className="btn btn-ghost">Read news</a>
+          <a href="/search" className="btn btn-ghost">Search</a>
+        </div>
+      </div>
+    </section>
   )
 }
 

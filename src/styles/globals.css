@@ -689,7 +689,7 @@ body { padding-top: 68px; }
 .hero-grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
-  gap: 72px;
+  gap: 96px;            /* §01: more breathing room */
   align-items: center;
   width: 100%;
 }
@@ -697,7 +697,7 @@ body { padding-top: 68px; }
 .hero h1 .accent { color: var(--accent-2); font-style: italic; }
 .hero p.lede { margin-bottom: 36px; max-width: 560px; }
 .hero-img {
-  aspect-ratio: 4/5;
+  aspect-ratio: 3/4;    /* §01: refined portrait */
   border-radius: var(--r-md);
   overflow: hidden;
   background: var(--paper-2);
@@ -848,7 +848,13 @@ body { padding-top: 68px; }
 }
 
 /* ── Funding tiers ──────────────────── */
-.tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.tier-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 28px; }
+.tier-grid > :first-child .tier-card { min-height: 480px; background: var(--paper-2); }
+.tier-grid > :first-child .tier-card h3 { font-size: clamp(28px, 2.8vw, 36px); }
+@media (max-width: 900px) {
+  .tier-grid { grid-template-columns: 1fr; }
+  .tier-grid > :first-child .tier-card { min-height: 0; }
+}
 .tier-card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -1929,3 +1935,123 @@ main[id="main-content"]:focus { outline: none; }
 /* §C — responsive --pad token at every breakpoint */
 @media (max-width: 1024px) { :root { --pad: 28px; } }
 @media (max-width: 768px)  { :root { --pad: 20px; } }
+
+/* Hero watermark — oversized italic "Toi" sitting behind the headline (§01) */
+.hero-watermark {
+  position: absolute;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(280px, 40vw, 540px);
+  font-weight: 200;
+  font-variation-settings: 'wght' 200, 'opsz' 144;
+  color: var(--ink);
+  opacity: 0.04;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+  letter-spacing: -0.06em;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Mobile hero image — 16/9 with face-safe object-position (§01, §B.4) */
+@media (max-width: 768px) {
+  .hero-img { aspect-ratio: 16/9; max-height: 360px; }
+  .hero-img img { object-position: center 25%; }
+  .hero-grid { gap: 40px; }
+  .hero-watermark { font-size: clamp(180px, 60vw, 320px); opacity: 0.06; }
+}
+
+/* ── Featured opportunity card (§03) ────────────── */
+.featured-opp {
+  display: grid;
+  grid-template-columns: 1.6fr auto;
+  gap: 48px;
+  align-items: center;
+  background: var(--kowhai);
+  color: var(--accent-ink);
+  border-radius: var(--r-lg);
+  padding: 32px 40px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s;
+}
+.featured-opp:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(232,163,23,0.3);
+}
+.featured-opp-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent-ink);
+  display: block;
+  margin-bottom: 14px;
+}
+.featured-opp h3 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 400;
+  color: var(--accent-ink);
+  margin-bottom: 6px;
+  line-height: 1.15;
+}
+.featured-opp .kupu {
+  display: block;
+  color: rgba(20,18,8,0.7);
+  margin-bottom: 14px;
+}
+.featured-opp .desc {
+  font-size: 15px;
+  color: rgba(20,18,8,0.85);
+  max-width: 560px;
+  line-height: 1.55;
+  margin: 0;
+}
+.featured-opp-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  text-align: right;
+}
+.featured-opp-meta .amt {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(28px, 2.8vw, 38px);
+  color: var(--accent-ink);
+  line-height: 1;
+}
+.featured-opp-meta .when {
+  font-size: 13px;
+  color: rgba(20,18,8,0.7);
+  text-align: right;
+}
+.featured-opp-meta .when .lbl {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.featured-opp-cta {
+  background: var(--ink);
+  color: var(--bg);
+  margin-top: 6px;
+}
+.featured-opp-cta:hover { background: #000; color: var(--bg); }
+@media (max-width: 768px) {
+  .featured-opp { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
+  .featured-opp-meta { align-items: flex-start; text-align: left; }
+  .featured-opp-meta .when { text-align: left; }
+}
+
+@keyframes cnzKoruDrift {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
