@@ -2978,3 +2978,17 @@ body.has-open-opps .fb-cta {
 }
 /* Guiding / vision / value / support stars keep their labels visible
    — these are the structural framework, not the secondary aspirations. */
+
+/* Dropdown right-anchor — applied by JS in Header.tsx when the dropdown
+   would otherwise overflow the right edge of the viewport. Anchors the
+   dropdown to the right of the parent nav item instead of the left. */
+.fb-dropdown.fb-dropdown--right-anchor {
+  left: auto;
+  right: 0;
+}
+.fb-dropdown.fb-dropdown--right-anchor .fb-dropdown-inner {
+  /* Mirror the kowhai accent stripe to the right side when right-anchored
+     so the visual cue stays close to the parent menu trigger. */
+  border-left: 1px solid rgba(28,27,29,0.08);
+  border-right: 3px solid var(--kowhai);
+}

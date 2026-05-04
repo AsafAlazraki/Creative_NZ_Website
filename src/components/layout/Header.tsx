@@ -186,6 +186,18 @@ export default function Header() {
                     {groups && isOpen && (
                       <motion.div
                         id={dropdownId}
+                        ref={(el: HTMLDivElement | null) => {
+                          // After mount: if the dropdown would overflow the
+                          // right edge of the viewport, flip it to right-anchor.
+                          if (!el) return
+                          requestAnimationFrame(() => {
+                            const rect = el.getBoundingClientRect()
+                            const margin = 16
+                            const overflowsRight = rect.right > window.innerWidth - margin
+                            const overflowsLeft  = rect.left  < margin
+                            el.classList.toggle('fb-dropdown--right-anchor', overflowsRight && !overflowsLeft)
+                          })
+                        }}
                         className={`fb-dropdown${items.length > 6 ? ' fb-dropdown--two-col' : ''}`}
                         role="menu"
                         aria-label={`${n.label} menu`}
