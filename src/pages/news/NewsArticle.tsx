@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { Helmet } from 'react-helmet-async'
 import { STORIES } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
@@ -73,6 +74,18 @@ export default function NewsArticle() {
 
   return (
     <>
+      <Helmet>
+        <title>{story.title} · Creative New Zealand</title>
+        <meta name="description" content={story.excerpt} />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={`${story.title} · Creative New Zealand`} />
+        <meta property="og:description" content={story.excerpt} />
+        <meta property="og:image" content={story.img} />
+        <meta property="og:url" content={`https://creativenz.netlify.app/news/${story.id}`} />
+        <meta name="twitter:title" content={`${story.title} · Creative New Zealand`} />
+        <meta name="twitter:description" content={story.excerpt} />
+        <meta name="twitter:image" content={story.img} />
+      </Helmet>
       <Breadcrumbs trail={[
         { label: 'Home', path: '/' },
         { label: 'News & stories', path: '/news' },

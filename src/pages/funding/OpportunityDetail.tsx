@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Bell } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 import { OPPORTUNITIES, getDraft } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
@@ -126,6 +127,16 @@ export default function OpportunityDetail() {
 
   return (
     <>
+      <Helmet>
+        <title>{o.title} · Creative New Zealand</title>
+        <meta name="description" content={o.desc} />
+        <meta property="og:title" content={`${o.title} · Creative New Zealand`} />
+        <meta property="og:description" content={o.desc} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://creativenz.netlify.app/funding/opportunity/${o.id}`} />
+        <meta name="twitter:title" content={`${o.title} · Creative New Zealand`} />
+        <meta name="twitter:description" content={o.desc} />
+      </Helmet>
       <SubNav items={SUB_ITEMS} />
       <Breadcrumbs
         trail={[
