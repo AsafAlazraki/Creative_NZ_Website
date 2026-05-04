@@ -149,6 +149,24 @@ function StarNode({
         }
       }}
     >
+      {/* §6 — Selection glow ring (shows when this node is the active one).
+         Two pulsing rings + a soft kowhai-tinted bloom replace the bare
+         <rect> outline of earlier iterations. */}
+      {isActive && (
+        <g aria-hidden="true">
+          <circle cx={star.x} cy={star.y} r={r + 28} fill="rgba(232,163,23,0.06)" />
+          <circle cx={star.x} cy={star.y} r={r + 10} fill="none"
+                  stroke="var(--kowhai)" strokeWidth={1} opacity={0.4} />
+          <motion.circle
+            cx={star.x} cy={star.y} r={r + 18} fill="none"
+            stroke="var(--kowhai)" strokeWidth={1.4}
+            initial={{ opacity: 0.65 }}
+            animate={{ opacity: [0.65, 0.18, 0.65], scale: [1, 1.18, 1] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: `${star.x}px ${star.y}px` }}
+          />
+        </g>
+      )}
       {/* Diffuse outer halo */}
       <motion.circle
         cx={star.x} cy={star.y} r={glowR}
@@ -458,9 +476,71 @@ function PromptCard({ onDismiss }: { onDismiss: () => void }) {
   )
 }
 
+// Extended content per node — adds meaning, initiatives, whakataukī kupu
+// and a related-funding link beyond the short `description` in STARS.
+// Only the four guiding stars + vision get the full treatment; others
+// fall back to just the description.
+const NODE_EXTENDED: Record<string, {
+  meaning?: string
+  initiatives?: string[]
+  kupu?: string
+  fundingLink?: { label: string; href: string }
+}> = {
+  vaka: {
+    meaning: 'Strong organisations are the vaka — the canoes — that navigate Pacific arts into the future across generations.',
+    initiatives: [
+      'Multi-year investment for Pacific arts organisations',
+      'Governance and capability building',
+      'Pacific festival infrastructure',
+    ],
+    kupu: 'He waka eke noa — we are all in this canoe together',
+    fundingLink: { label: 'Organisations funding →', href: '/funding/organisations' },
+  },
+  tagata: {
+    meaning: 'Every initiative starts with people — artists, ringatoi, rangatahi and kaumātua. Tagata is the heart of every pillar.',
+    initiatives: [
+      'Leadership pathways for emerging Pasifika artists',
+      'Intergenerational knowledge transfer programmes',
+      'Community arts hubs in Pacific communities',
+    ],
+    kupu: 'Ko te tangata te puna o te ora',
+    fundingLink: { label: 'All Pasifika opportunities →', href: '/funding/opportunities?tier=pasifika' },
+  },
+  moana: {
+    meaning: 'Moana is about relationships — with the Pacific diaspora, artists across the region, audiences worldwide.',
+    initiatives: [
+      'Pacific arts exchange programmes',
+      'International touring support',
+      'Digital platforms for Pacific arts',
+    ],
+    kupu: 'Tērā te Moana-nui-a-Kiwa — there lies the great ocean',
+    fundingLink: { label: 'International opportunities →', href: '/funding/opportunities' },
+  },
+  va: {
+    meaning: 'Vā is the relational space between people, communities and the environment — the conditions that make practice possible.',
+    initiatives: [
+      'Kaupapa Pasifika policy frameworks',
+      'Pacific arts infrastructure investment',
+      'Mana Pasifika in decision-making',
+    ],
+    kupu: 'Va fealoaloaʻi — the relational space',
+    fundingLink: { label: 'Advice & support →', href: '/funding/advice' },
+  },
+  vision: {
+    meaning: 'Our overarching kaupapa for Toi Aotearoa: a flourishing arts sector that contributes to the cultural, social and economic wellbeing of all New Zealanders.',
+    initiatives: [
+      'Resilient & adaptable Pacific arts ecosystem',
+      'Equitable access to participate and create',
+      'Global recognition for New Zealand arts',
+    ],
+    kupu: 'Mā te toi e ora ai te wairua — through art, the spirit lives',
+    fundingLink: { label: 'About Creative NZ →', href: '/about' },
+  },
+}
+
 function NodePanel({ star, onClose }: { star: Star; onClose: () => void }) {
   const accent = NODE_ACCENT[star.id] ?? STAR_COLOR[star.kind]
-  // Escape closes
+  const ext = NODE_EXTENDED[star.id]
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
@@ -477,20 +557,51 @@ function NodePanel({ star, onClose }: { star: Star; onClose: () => void }) {
       exit={{ x: '100%' }}
       transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
       className="strategy-node-panel"
-      style={{ borderLeft: `3px solid ${accent}` }}
     >
+      <span className="strategy-node-panel-accent" style={{ background: accent }} aria-hidden="true" />
       <button onClick={onClose} aria-label="Close" className="strategy-node-panel-close">
         <X size={18} />
       </button>
-      {star.sublabel && (
-        <div className="strategy-node-panel-eyebrow" style={{ color: accent }}>
-          {star.sublabel}
-        </div>
+      <header style={{ padding: '40px 36px 24px', position: 'relative' }}>
+        {star.sublabel && (
+          <div className="strategy-node-panel-eyebrow" style={{ color: 'var(--kowhai)' }}>
+            {star.sublabel}
+          </div>
+        )}
+        <h3 id={`node-panel-${star.id}-title`} className="strategy-node-panel-title">
+          {star.label}
+        </h3>
+      </header>
+      <div className="strategy-node-panel-body-wrap">
+        <p className="strategy-node-panel-body">{star.description}</p>
+
+        {ext?.meaning && (
+          <section className="strategy-node-panel-section">
+            <h4>What this means</h4>
+            <p>{ext.meaning}</p>
+          </section>
+        )}
+
+        {ext?.initiatives && ext.initiatives.length > 0 && (
+          <section className="strategy-node-panel-section">
+            <h4>Key initiatives</h4>
+            <ul className="strategy-node-panel-list">
+              {ext.initiatives.map((it, i) => <li key={i}>{it}</li>)}
+            </ul>
+          </section>
+        )}
+
+        {ext?.fundingLink && (
+          <a href={ext.fundingLink.href} className="strategy-node-panel-cta">
+            {ext.fundingLink.label}
+          </a>
+        )}
+      </div>
+      {ext?.kupu && (
+        <footer className="strategy-node-panel-footer">
+          <span className="strategy-node-panel-kupu">{ext.kupu}</span>
+        </footer>
       )}
-      <h3 id={`node-panel-${star.id}-title`} className="strategy-node-panel-title">
-        {star.label}
-      </h3>
-      <p className="strategy-node-panel-body">{star.description}</p>
       {(star.kind === 'guiding' || star.kind === 'vision') && (
         <div className="strategy-node-panel-tag">
           {star.kind === 'guiding' ? 'A guiding star of the Pacific Arts Strategy' : 'Our vision for Toi Aotearoa'}
