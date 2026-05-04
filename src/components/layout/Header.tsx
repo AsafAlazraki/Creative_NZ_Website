@@ -310,7 +310,7 @@ export default function Header() {
                 pointerEvents: 'auto',
                 margin: '6px 16px 0',
                 padding: '16px',
-                background: 'rgba(255,253,247,0.97)',
+                background: 'rgba(255,253,247,1)',
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(28,27,29,0.08)',
                 borderRadius: '20px',
