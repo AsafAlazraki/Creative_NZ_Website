@@ -174,6 +174,19 @@ function AppContent() {
     }
   }, [])
 
+  // Toggle body class so the Apply CTA can pulse when there's at least
+  // one open opportunity (POLISH 3). Lazy-import the data so it doesn't
+  // bloat the initial App bundle — runs after first paint.
+  useEffect(() => {
+    let cancelled = false
+    import('@/data').then(({ OPPORTUNITIES }) => {
+      if (cancelled) return
+      const hasOpen = OPPORTUNITIES.some(o => o.status === 'open')
+      document.body.classList.toggle('has-open-opps', hasOpen)
+    })
+    return () => { cancelled = true }
+  }, [])
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,

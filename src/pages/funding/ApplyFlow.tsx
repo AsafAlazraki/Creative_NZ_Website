@@ -44,17 +44,17 @@ interface FormState {
 }
 
 // Live word counter shown beneath text inputs/textareas.
-function WordCounter({ value, limit, hint }: { value: string; limit: number; hint?: string }) {
+function WordCounter({ id, value, limit, hint }: { id?: string; value: string; limit: number; hint?: string }) {
   const count = countWords(value)
   const ratio = count / limit
-  const color =
-    count > limit ? 'var(--pohutukawa)' :
-    ratio > 0.8 ? 'var(--kowhai-deep)' :
-    'var(--muted)'
+  const cls =
+    count > limit ? 'field-counter field-counter--over' :
+    ratio > 0.8 ? 'field-counter field-counter--warn' :
+    'field-counter'
   return (
-    <div className="hint" style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginTop: 6 }}>
+    <div id={id} className="hint" style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginTop: 6, alignItems: 'center' }}>
       <span>{hint}</span>
-      <span style={{ color, fontFeatureSettings: '"tnum"' }} aria-live="polite">
+      <span className={cls} aria-live="polite" aria-atomic="true">
         {count} / {limit} words
       </span>
     </div>
@@ -277,25 +277,29 @@ export default function ApplyFlow() {
                     <label>Project title</label>
                     <input value={form.projectTitle} onChange={e => upd('projectTitle', e.target.value)} />
                   </div>
-                  <div className="field full">
+                  <div className={`field full${overDescLimit ? ' field--error' : ''}`}>
                     <label htmlFor="apply-project-desc">One-sentence description</label>
                     <input
                       id="apply-project-desc"
                       placeholder="Describe your project in one sentence"
                       value={form.projectDesc}
                       onChange={e => upd('projectDesc', e.target.value)}
+                      aria-invalid={overDescLimit}
+                      aria-describedby="apply-project-desc-counter"
                     />
-                    <WordCounter value={form.projectDesc} limit={PROJECT_DESC_LIMIT} hint="This appears on the public list of funded projects if successful." />
+                    <WordCounter id="apply-project-desc-counter" value={form.projectDesc} limit={PROJECT_DESC_LIMIT} hint="This appears on the public list of funded projects if successful." />
                   </div>
-                  <div className="field full">
+                  <div className={`field full${overStoryLimit ? ' field--error' : ''}`}>
                     <label htmlFor="apply-project-story">Tell us about your project</label>
                     <textarea
                       id="apply-project-story"
                       rows={8}
                       value={form.projectStory}
                       onChange={e => upd('projectStory', e.target.value)}
+                      aria-invalid={overStoryLimit}
+                      aria-describedby="apply-project-story-counter"
                     />
-                    <WordCounter value={form.projectStory} limit={PROJECT_STORY_LIMIT} hint="Up to 500 words. Tell us what, who and why." />
+                    <WordCounter id="apply-project-story-counter" value={form.projectStory} limit={PROJECT_STORY_LIMIT} hint="Up to 500 words. Tell us what, who and why." />
                   </div>
                   <div className="field">
                     <label>Start date</label>
