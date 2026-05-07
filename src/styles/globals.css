@@ -2645,30 +2645,6 @@ main[id="main-content"]:focus { outline: none; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ── Theme toggle button (R2 §13) ─────────── */
-.fb-theme-toggle {
-  width: 36px;
-  height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink-2);
-  border-radius: 999px;
-  cursor: pointer;
-  margin: 0 6px;
-  transition: background 0.18s, color 0.18s, border-color 0.18s;
-}
-.fb-theme-toggle:hover,
-.fb-theme-toggle[aria-pressed="true"]:hover {
-  background: var(--kowhai);
-  color: var(--accent-ink);
-  border-color: var(--kowhai);
-}
-@media (max-width: 1024px) {
-  .fb-theme-toggle { display: inline-flex; }  /* keep visible at all widths */
-}
 
 /* ── Email alert sign-up (R2 §14) ─────────── */
 .alert-signup {
@@ -3109,5 +3085,32 @@ body.has-open-opps .fb-cta {
   .floatbar [style*="rgba(255,253,247,0.97)"],
   .floatbar [class*="mobile"] {
     background: rgba(255,253,247,1) !important;
+  }
+}
+
+/* ── Motion safety net (R7 #2) ──────────────────
+   Framer Motion's whileInView occasionally fails to fire when an element
+   is already past the viewport margin at mount or after a state-driven
+   re-render (filter clicks, route changes, step transitions). The
+   symptom is large blank gaps that only fill in after scroll.
+
+   Fallback: any motion element still at opacity:0 after 1.4s gets
+   forced to opacity:1 via a CSS animation that overrides framer's
+   inline style. The 1.4s delay is long enough that legitimate
+   whileInView animations (typically <1s) have already played; only
+   stuck elements get unstuck.
+*/
+@keyframes cnzMotionFallback {
+  to { opacity: 1; transform: none; filter: none; }
+}
+[style*="opacity: 0"][style*="transform"],
+[style*="opacity:0"][style*="transform"] {
+  animation: cnzMotionFallback 0.5s ease 1.4s forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* With reduced motion, render content immediately rather than wait */
+  [style*="opacity: 0"][style*="transform"],
+  [style*="opacity:0"][style*="transform"] {
+    animation: cnzMotionFallback 0.001s linear 0s forwards;
   }
 }

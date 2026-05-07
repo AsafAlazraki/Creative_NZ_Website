@@ -44,6 +44,68 @@ interface FormState {
 }
 
 // Live word counter shown beneath text inputs/textareas.
+// Live-summing budget table.
+function BudgetTable({ lines }: { lines: string[] }) {
+  const [values, setValues] = useState<number[]>(() => lines.map(() => 0))
+  const [labels, setLabels] = useState<string[]>(() => lines.map(() => ''))
+  const total = values.reduce((s, v) => s + (Number.isFinite(v) ? v : 0), 0)
+  const fmt = new Intl.NumberFormat('en-NZ', { style: 'currency', currency: 'NZD', maximumFractionDigits: 0 })
+  const setValueAt = (idx: number, raw: string) => {
+    const num = Number(raw.replace(/[^0-9.]/g, ''))
+    setValues(prev => prev.map((v, i) => i === idx ? (Number.isFinite(num) ? num : 0) : v))
+  }
+  return (
+    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <thead>
+        <tr style={{ borderBottom: '1px solid var(--line)' }}>
+          <th style={{ textAlign: 'left', padding: '12px 0', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontWeight: 600 }}>
+            Line item
+          </th>
+          <th style={{ textAlign: 'right', padding: '12px 0', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontWeight: 600, width: 180 }}>
+            Cost (NZD)
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {lines.map((line, i) => (
+          <tr key={line} style={{ borderBottom: '1px solid var(--line)' }}>
+            <td style={{ padding: '14px 0' }}>
+              <input
+                placeholder={line}
+                value={labels[i]}
+                onChange={e => setLabels(prev => prev.map((v, j) => j === i ? e.target.value : v))}
+                style={{ border: 'none', background: 'transparent', fontSize: 15, fontFamily: 'inherit', color: 'var(--ink)', width: '100%', outline: 'none' }}
+                aria-label={`Budget line ${i + 1} description`}
+              />
+            </td>
+            <td style={{ padding: '14px 0' }}>
+              <input
+                placeholder="0"
+                inputMode="numeric"
+                value={values[i] ? values[i].toLocaleString('en-NZ') : ''}
+                onChange={e => setValueAt(i, e.target.value)}
+                style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 15, fontFamily: 'var(--font-mono)', color: 'var(--ink)', textAlign: 'right', outline: 'none' }}
+                aria-label={`Budget line ${i + 1} amount in New Zealand dollars`}
+              />
+            </td>
+          </tr>
+        ))}
+        <tr style={{ borderTop: '2px solid var(--line)' }}>
+          <td style={{ padding: '20px 0', fontFamily: 'var(--font-display)', fontSize: 18 }}>Total requested</td>
+          <td style={{
+            padding: '20px 0', textAlign: 'right',
+            fontFamily: 'var(--font-display)', fontSize: 24, fontStyle: 'italic',
+            color: total > 0 ? 'var(--ink)' : 'var(--muted)',
+            fontFeatureSettings: '"tnum"',
+          }} aria-live="polite">
+            {fmt.format(total)}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  )
+}
+
 function WordCounter({ id, value, limit, hint }: { id?: string; value: string; limit: number; hint?: string }) {
   const count = countWords(value)
   const ratio = count / limit
@@ -319,40 +381,7 @@ export default function ApplyFlow() {
               {step === 3 && (
                 <div>
                   <h3 style={{ marginBottom: 24 }}>Your budget</h3>
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid var(--line)' }}>
-                        <th style={{ textAlign: 'left', padding: '12px 0', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontWeight: 600 }}>
-                          Line item
-                        </th>
-                        <th style={{ textAlign: 'right', padding: '12px 0', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', fontWeight: 600, width: 160 }}>
-                          Cost (NZD)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {BUDGET_LINES.map(line => (
-                        <tr key={line} style={{ borderBottom: '1px solid var(--line)' }}>
-                          <td style={{ padding: '14px 0' }}>
-                            <input
-                              placeholder={line}
-                              style={{ border: 'none', background: 'transparent', fontSize: 15, fontFamily: 'inherit', color: 'var(--ink)', width: '100%', outline: 'none' }}
-                            />
-                          </td>
-                          <td style={{ padding: '14px 0' }}>
-                            <input
-                              placeholder="0"
-                              style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 15, fontFamily: 'var(--font-mono)', color: 'var(--ink)', textAlign: 'right', outline: 'none' }}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                      <tr>
-                        <td style={{ padding: '18px 0', fontFamily: 'var(--font-display)', fontSize: 18 }}>Total requested</td>
-                        <td style={{ padding: '18px 0', textAlign: 'right', fontFamily: 'var(--font-display)', fontSize: 22, fontStyle: 'italic' }}>$0</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <BudgetTable lines={BUDGET_LINES} />
                 </div>
               )}
 
