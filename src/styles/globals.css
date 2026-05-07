@@ -2088,8 +2088,9 @@ main[id="main-content"]:focus { outline: none; }
 @media (max-width: 1024px) { :root { --pad: 28px; } }
 @media (max-width: 768px)  { :root { --pad: 20px; } }
 
-/* Hero watermark — oversized italic "Toi" sitting behind the headline (§01) */
-.hero-watermark {
+/* Hero watermark — disabled for production launch */
+.hero-watermark { display: none !important; }
+.hero-watermark-disabled-stub {
   position: absolute;
   font-family: var(--font-display);
   font-style: italic;
