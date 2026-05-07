@@ -172,6 +172,7 @@ export default function ToiMaoriPage() {
             {PILLARS.map((pillar, i) => (
               <motion.div
                 key={pillar.reo}
+                className="priority-card"
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-30px' }}

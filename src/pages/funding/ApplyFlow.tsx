@@ -372,8 +372,21 @@ export default function ApplyFlow() {
                     <input type="date" value={form.endDate} onChange={e => upd('endDate', e.target.value)} />
                   </div>
                   <div className="field full">
-                    <label>Who will this work reach?</label>
-                    <textarea rows={4} value={form.reach} onChange={e => upd('reach', e.target.value)} />
+                    <label htmlFor="reach">Who will this work reach?</label>
+                    <textarea
+                      id="reach"
+                      rows={4}
+                      value={form.reach}
+                      onChange={e => upd('reach', e.target.value)}
+                      aria-describedby="reach-hint"
+                      placeholder="Audiences, communities, geographic regions…"
+                    />
+                    <div id="reach-hint" className="hint" style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                      <span>Be specific: estimated audience size, communities, regions, accessibility considerations.</span>
+                      <span aria-live="polite" className={`field-counter${form.reach.length > 600 ? ' field-counter--over' : form.reach.length > 480 ? ' field-counter--warn' : ''}`}>
+                        {form.reach.length} / 600
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}

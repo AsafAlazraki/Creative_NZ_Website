@@ -1,9 +1,40 @@
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { STORIES } from '@/data'
 import { KoruCorner, ScrollReveal, MagneticHover } from '@/components/motif/KoruMotifs'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
+
+// Share buttons + Copy-link with feedback toast
+function ShareRow({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false)
+  const url = typeof window !== 'undefined' ? window.location.href : ''
+  const text = `${title} — Creative New Zealand`
+  const e = encodeURIComponent
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* ignore */ }
+  }
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <a className="pill" style={{ fontSize: 12, textDecoration: 'none' }} target="_blank" rel="noreferrer noopener" href={`https://twitter.com/intent/tweet?url=${e(url)}&text=${e(text)}`}>Twitter / X</a>
+      <a className="pill" style={{ fontSize: 12, textDecoration: 'none' }} target="_blank" rel="noreferrer noopener" href={`https://www.linkedin.com/sharing/share-offsite/?url=${e(url)}`}>LinkedIn</a>
+      <a className="pill" style={{ fontSize: 12, textDecoration: 'none' }} target="_blank" rel="noreferrer noopener" href={`https://www.facebook.com/sharer/sharer.php?u=${e(url)}`}>Facebook</a>
+      <button
+        className={`pill${copied ? ' on' : ''}`}
+        style={{ fontSize: 12 }}
+        onClick={handleCopy}
+        aria-live="polite"
+      >
+        {copied ? '✓ Copied!' : 'Copy link'}
+      </button>
+    </div>
+  )
+}
 
 // Expanded article bodies keyed by story id
 const ARTICLE_BODIES: Record<string, string[]> = {
@@ -215,44 +246,7 @@ export default function NewsArticle() {
               }}>
                 <div>
                   <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 10, fontWeight: 500 }}>Share this story</div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    {(() => {
-                      const url = typeof window !== 'undefined' ? window.location.href : ''
-                      const text = `${story.title} — Creative New Zealand`
-                      const e = encodeURIComponent
-                      const SHARES = [
-                        { label: 'Twitter / X', href: `https://twitter.com/intent/tweet?url=${e(url)}&text=${e(text)}` },
-                        { label: 'LinkedIn',    href: `https://www.linkedin.com/sharing/share-offsite/?url=${e(url)}` },
-                        { label: 'Facebook',    href: `https://www.facebook.com/sharer/sharer.php?u=${e(url)}` },
-                        { label: 'Copy link',   href: '' },
-                      ]
-                      return SHARES.map(s => s.label === 'Copy link' ? (
-                        <button
-                          key={s.label}
-                          className="pill"
-                          style={{ fontSize: 12 }}
-                          onClick={() => {
-                            if (typeof navigator !== 'undefined' && navigator.clipboard) {
-                              navigator.clipboard.writeText(url)
-                            }
-                          }}
-                        >
-                          {s.label}
-                        </button>
-                      ) : (
-                        <a
-                          key={s.label}
-                          className="pill"
-                          style={{ fontSize: 12, textDecoration: 'none' }}
-                          href={s.href}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                        >
-                          {s.label}
-                        </a>
-                      ))
-                    })()}
-                  </div>
+                  <ShareRow title={story.title} />
                 </div>
                 <MagneticHover strength={0.2}>
                   <Link to="/news" className="btn btn-ghost">← Back to news</Link>

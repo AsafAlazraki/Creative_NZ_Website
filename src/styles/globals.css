@@ -1101,6 +1101,18 @@ body { padding-top: 68px; }
   color: var(--ink);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
+/* Native select — strip default chrome and supply our own chevron */
+.field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231a1612' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+.field select:hover { border-color: var(--ink); }
 .field input:focus, .field select:focus, .field textarea:focus {
   outline: none;
   border-color: var(--ink);
@@ -3113,4 +3125,40 @@ body.has-open-opps .fb-cta {
   [style*="opacity:0"][style*="transform"] {
     animation: cnzMotionFallback 0.001s linear 0s forwards;
   }
+}
+
+/* ── Polish: brand-coloured form controls (R7 #9) ─────────
+   Use accent-color so native checkboxes/radios/range inherit
+   our kowhai gold without a custom JS solution. */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"] {
+  accent-color: var(--kowhai);
+}
+
+/* ── Polish: news card hover (R7 #10) ─────────
+   Lift + soft shadow on every news card. The .ncard already has
+   a built-in image scale on :hover; this adds card-level depth. */
+.ncard {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border-radius: var(--r-md);
+}
+.ncard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(26,22,18,0.08);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ncard:hover { transform: none; }
+}
+
+/* Toi Māori / Toi Pasifika priority cards — same lift treatment */
+.priority-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.priority-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(26,22,18,0.08);
+}
+@media (prefers-reduced-motion: reduce) {
+  .priority-card:hover { transform: none; }
 }
