@@ -119,8 +119,8 @@ export default function FundingCalendar() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.14 }}
           >
-            Bars show when each fund's round is open. Hover any bar for the
-            opportunity title; click through to read full criteria.
+            Each row shows when a fund is open and the funding amount available.
+            Click a row to read full criteria.
           </motion.p>
         </div>
       </div>
@@ -129,21 +129,17 @@ export default function FundingCalendar() {
         <div className="container">
           {/* Legend */}
           <ScrollReveal>
-            <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', marginBottom: 32, fontSize: 12, color: 'var(--muted)' }}>
+            <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', marginBottom: 32, fontSize: 12, color: 'var(--muted)' }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 18, height: 8, background: 'var(--bush)', borderRadius: 2 }} />
-                Round window
+                <span style={{ width: 22, height: 8, background: 'var(--bush)', borderRadius: 4 }} />
+                Round open during this window
               </span>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span style={{
-                  width: 18, height: 8,
-                  background: 'repeating-linear-gradient(45deg, var(--moana), var(--moana) 4px, transparent 4px, transparent 8px)',
-                  borderRadius: 2,
-                }} />
-                Open year-round
+                <span style={{ width: 8, height: 16, background: 'var(--pohutukawa)', borderRadius: 2 }} />
+                Closes (deadline)
               </span>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 2, height: 14, background: 'var(--pohutukawa)' }} />
+                <span style={{ width: 2, height: 14, background: 'var(--ink)' }} />
                 Today
               </span>
             </div>
@@ -183,6 +179,18 @@ export default function FundingCalendar() {
               const color = TIER_COLOR[opp.tier] ?? 'var(--bush)'
               const startPct = (bar.start / MONTHS.length) * 100
               const widthPct = ((bar.end - bar.start) / MONTHS.length) * 100
+              // Deadline marker for non-rolling rounds (the closing date)
+              const deadlinePct = bar.rolling ? null : ((bar.end - 0.05) / MONTHS.length) * 100
+              const statusLabel = bar.rolling
+                ? 'Open year-round'
+                : opp.status === 'upcoming'
+                  ? `Opens ${opp.next}`
+                  : `Closes ${opp.next}`
+              const statusClass = bar.rolling
+                ? 'cal-status cal-status--rolling'
+                : opp.status === 'upcoming'
+                  ? 'cal-status cal-status--upcoming'
+                  : 'cal-status cal-status--closes'
 
               return (
                 <motion.div
@@ -197,6 +205,10 @@ export default function FundingCalendar() {
                     <div className="cal-row-code">{opp.code}</div>
                     <div className="cal-row-title">{opp.title}</div>
                     {opp.kupu && <div className="cal-row-kupu">{opp.kupu}</div>}
+                    <div className="cal-row-meta">
+                      <span className="cal-amount">{opp.amount}</span>
+                      <span className={statusClass}>{statusLabel}</span>
+                    </div>
                   </Link>
                   <div className="cal-row-track">
                     {/* faint month-grid lines */}
@@ -210,7 +222,7 @@ export default function FundingCalendar() {
 
                     <Link
                       to={`/funding/opportunity/${opp.id}`}
-                      className={`cal-bar${bar.rolling ? ' cal-bar--rolling' : ''}`}
+                      className="cal-bar"
                       title={`${opp.title} — ${opp.amount} — ${opp.next}`}
                       data-tooltip-title={opp.title}
                       data-tooltip-amt={opp.amount}
@@ -218,14 +230,19 @@ export default function FundingCalendar() {
                       style={{
                         left: `${startPct}%`,
                         width: `${widthPct}%`,
-                        background: bar.rolling
-                          ? `repeating-linear-gradient(45deg, ${color}, ${color} 6px, transparent 6px, transparent 12px), color-mix(in srgb, ${color} 18%, var(--bg))`
-                          : color,
+                        background: color,
                         borderColor: color,
                       }}
-                    >
-                      <span className="cal-bar-amount">{opp.amount}</span>
-                    </Link>
+                      aria-label={`${opp.title}, ${opp.amount}, ${statusLabel}`}
+                    />
+                    {/* Deadline marker — small vertical pohutukawa bar at the close date */}
+                    {deadlinePct !== null && (
+                      <div
+                        className="cal-deadline-marker"
+                        style={{ left: `${deadlinePct}%` }}
+                        aria-hidden="true"
+                      />
+                    )}
                   </div>
                 </motion.div>
               )
