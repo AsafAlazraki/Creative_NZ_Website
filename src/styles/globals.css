@@ -681,14 +681,25 @@ body { padding-top: 68px; }
 
 /* ── Hero ───────────────────────────── */
 .hero {
-  padding: calc(88px * var(--density)) 0 calc(72px * var(--density));
+  padding: calc(56px * var(--density)) 0 calc(48px * var(--density));
   border-bottom: 1px solid var(--line);
   position: relative;
   overflow: hidden;
-  min-height: 85vh;
+  min-height: 100svh;
+  /* fall back for browsers without svh */
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
 }
+/* Cap the hero headline so the lede + CTAs always sit above the fold */
+.hero h1 {
+  font-size: clamp(36px, 4vw, 56px) !important;
+  line-height: 1.05 !important;
+}
+.hero p.lede { font-size: clamp(15px, 1.1vw, 18px); }
+.hero-img { max-height: 70vh; }
 .hero-grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
